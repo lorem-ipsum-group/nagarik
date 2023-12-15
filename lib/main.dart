@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nagarik/local_auth_interface.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,6 +14,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
         title: "nagarik app",
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale('en'), // English
+          Locale('ne'), // Nepali
+        ],
+        //if button is clicked locale should be chosen like this
+        locale: Locale('ne'),
         debugShowCheckedModeBanner: false,
         home: AuthenticationPage());
   }
@@ -25,9 +39,9 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text("Nagarik App"),
+        title: Text(AppLocalizations.of(context).nagarik),
       ),
-      body: const Center(child: Text("Hello World!")),
+      body: Center(child: Text(AppLocalizations.of(context).helloWorld)),
     );
   }
 }
@@ -40,7 +54,7 @@ class AuthenticationPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blue,
-          title: const Text("Authenticate"),
+          title: Text(AppLocalizations.of(context).authenticate),
         ),
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
