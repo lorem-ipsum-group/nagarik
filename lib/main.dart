@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nagarik/local_auth_interface.dart';
+import 'package:nagarik/home.dart~';
+import 'package:nagarik/documents.dart';
+import 'package:nagarik/notifications.dart';
+import 'package:nagarik/profile.dart';
+import 'package:nagarik/my_colors.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,18 +22,89 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  final tabs = const [
+    home,
+    documents,
+    notifications,
+    profile,
+  ];
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _currentTabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text("Nagarik App"),
-      ),
-      body: const Center(child: Text("Hello World!")),
-    );
+        appBar: AppBar(
+          backgroundColor: pastel,
+          title: const Text("Hi, John"),
+          toolbarHeight: 50,
+          leadingWidth: 100,
+          leading: Container(
+            decoration: const BoxDecoration(shape: BoxShape.circle),
+            clipBehavior: Clip.hardEdge,
+            child: const Image(
+                image: NetworkImage("https://plchldr.co/i/500x250")),
+          ),
+          actions: const [
+            IconButton(onPressed: null, icon: Icon(Icons.more_vert))
+          ],
+        ),
+        body: widget.tabs[_currentTabIndex](),
+        bottomNavigationBar: BottomAppBar(
+          elevation: 50,
+          height: 80,
+          notchMargin: 6.0,
+          shape: const CircularNotchedRectangle(),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          shadowColor: Colors.black,
+          surfaceTintColor: pastel,
+          color: pastel,
+          child: Theme(
+            data: ThemeData(splashColor: Colors.transparent),
+            child: BottomNavigationBar(
+              elevation: 0,
+              currentIndex: _currentTabIndex,
+              type: BottomNavigationBarType.fixed,
+              fixedColor: red,
+              unselectedItemColor: red,
+              backgroundColor: Colors.transparent,
+              iconSize: 20,
+              selectedIconTheme: const IconThemeData(size: 30),
+              onTap: (int index) {
+                setState(() {
+                  _currentTabIndex = index;
+                });
+              },
+              items: const [
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.home_filled), label: "Home"),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.document_scanner), label: "Documents"),
+                BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.notifications,
+                    ),
+                    label: "Notifications"),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person), label: "Profile"),
+              ],
+            ),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: const FloatingActionButton(
+          onPressed: null,
+          shape: CircleBorder(),
+          child: Icon(Icons.qr_code),
+        ));
   }
 }
 
