@@ -38,6 +38,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
   flutter_test:
