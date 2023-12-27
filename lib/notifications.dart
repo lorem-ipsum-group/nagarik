@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nagarik/my_colors.dart';
 import 'package:intl/intl.dart';
+import 'package:nagarik/bottom_nav_bar.dart';
 
 class NotificationTileItem {
   const NotificationTileItem(
@@ -12,20 +13,38 @@ class NotificationTileItem {
 }
 
 class Notifications extends StatelessWidget {
-  const Notifications({required this.notifications, super.key});
+  const Notifications({required this.switchTab, required this.notifications, super.key});
 
   final List<NotificationTileItem> notifications;
+  final void Function(int index) switchTab;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.all(10),
-        child: Expanded(
-          child: ListView.builder(
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: pastel,
+          title: const Text("Notifications"),
+          toolbarHeight: 50,
+          actions: const [
+            IconButton(onPressed: null, icon: Icon(Icons.more_vert))
+          ],
+        ),
+        body: Container(
+          padding: const EdgeInsets.all(10),
+          child: Expanded(
+            child: ListView.builder(
               itemCount: notifications.length,
               itemBuilder: (context, index) {
                 return notificationTile(notifications[index]);
-              }),
+            }),
+        )),
+        bottomNavigationBar: MyBottomNavBar(currentTabIndex: 3, switchTab: switchTab,),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: const FloatingActionButton(
+          onPressed: null,
+          shape: CircleBorder(),
+          backgroundColor: blue,
+          child: Icon(Icons.qr_code, color: white),
         ));
   }
 }

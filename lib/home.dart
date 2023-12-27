@@ -2,58 +2,80 @@ import 'package:flutter/material.dart';
 import 'package:nagarik/my_buttons.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:nagarik/my_colors.dart';
+import 'package:nagarik/bottom_nav_bar.dart';
 
-class Home extends StatelessWidget{
-  const Home({super.key});
+class Home extends StatelessWidget {
+  const Home({required this.switchTab, super.key});
+
+  final void Function(int index) switchTab;
 
   @override
   Widget build(BuildContext context) {
-  return SingleChildScrollView(
-      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-    TopServices(
-        items: [
-          TopServicesItem(
-              icon: Icons.credit_card, label: "Citizenship", onTap: null),
-          TopServicesItem(icon: Icons.credit_card, label: "PAN", onTap: null),
-          TopServicesItem(
-              icon: Icons.credit_card, label: "Passport", onTap: null),
-        ],
-        bgColor: lightBlue,
-        fgColor: blue
-      ),
-      
-    IssuedDocuments(documents: [
-      IssuedDocumentItem(
-          title: "Citizenship",
-          id: "77-01-75-01554",
-          subtitle: "Ministry of Home Affairs"),
-      IssuedDocumentItem(
-          title: "Citizenship",
-          id: "77-01-75-01554",
-          subtitle: "Ministry of Home Affairs"),
-      IssuedDocumentItem(
-          title: "Citizenship",
-          id: "77-01-75-01554",
-          subtitle: "Ministry of Home Affairs"),
-    ]),
-    
-    const AllServices(services: [
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-    ])
-  ]));
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: pastel,
+          title: const Text("Hi, John"),
+          toolbarHeight: 50,
+          leadingWidth: 100,
+          leading: Container(
+            decoration: const BoxDecoration(shape: BoxShape.circle),
+            clipBehavior: Clip.hardEdge,
+            child: const Image(
+                image: NetworkImage("https://plchldr.co/i/500x250")),
+          ),
+          actions: const [
+            IconButton(onPressed: null, icon: Icon(Icons.more_vert))
+          ],
+        ),
+        body: SingleChildScrollView(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+          TopServices(items: [
+            TopServicesItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            TopServicesItem(icon: Icons.credit_card, label: "PAN", onTap: null),
+            TopServicesItem(
+                icon: Icons.credit_card, label: "Passport", onTap: null),
+          ], bgColor: lightBlue, fgColor: blue),
+          IssuedDocuments(documents: [
+            IssuedDocumentItem(
+                title: "Citizenship",
+                id: "77-01-75-01554",
+                subtitle: "Ministry of Home Affairs"),
+            IssuedDocumentItem(
+                title: "Citizenship",
+                id: "77-01-75-01554",
+                subtitle: "Ministry of Home Affairs"),
+            IssuedDocumentItem(
+                title: "Citizenship",
+                id: "77-01-75-01554",
+                subtitle: "Ministry of Home Affairs"),
+          ]),
+          const AllServices(services: [
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+          ])
+        ])),
+        bottomNavigationBar: MyBottomNavBar(currentTabIndex: 0, switchTab: switchTab,),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: const FloatingActionButton(
+          onPressed: null,
+          shape: CircleBorder(),
+          backgroundColor: blue,
+          child: Icon(Icons.qr_code, color: white),
+        ));
   }
 }
 
@@ -79,7 +101,7 @@ class TopServices extends StatelessWidget {
             const Text(
               "Top Services",
               style: TextStyle(
-                  fontSize: 25, color: red, fontWeight: FontWeight.w500),
+                  fontSize: 25, color: red, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 20),
             Row(
@@ -131,7 +153,7 @@ class IssuedDocumentsState extends State<IssuedDocuments> {
                       style: TextStyle(
                           fontSize: 25,
                           color: red,
-                          fontWeight: FontWeight.w500),
+                          fontWeight: FontWeight.w600),
                     ),
                     IconButton(
                         onPressed: null,
@@ -173,9 +195,7 @@ class IssuedDocumentsState extends State<IssuedDocuments> {
                             vertical: 8.0, horizontal: 4.0),
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: entry.key == _currentPage
-                                ? red
-                                : fadedRed)),
+                            color: entry.key == _currentPage ? red : fadedRed)),
                   );
                 }).toList(),
               )
@@ -184,10 +204,7 @@ class IssuedDocumentsState extends State<IssuedDocuments> {
 }
 
 class AllServices extends StatelessWidget {
-  const AllServices(
-      {required this.services,
-      this.fgColor = blue,
-      super.key});
+  const AllServices({required this.services, this.fgColor = blue, super.key});
 
   final List<ServicesListItem> services;
   final Color fgColor;
@@ -203,9 +220,7 @@ class AllServices extends StatelessWidget {
               const Text(
                 "All Services",
                 style: TextStyle(
-                    fontSize: 25,
-                    color: red,
-                    fontWeight: FontWeight.w500),
+                    fontSize: 25, color: red, fontWeight: FontWeight.w600),
               ),
               GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

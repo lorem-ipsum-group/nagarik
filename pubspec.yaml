@@ -38,6 +38,7 @@ dependencies:
   local_auth: ^2.1.7
   carousel_slider: ^4.2.1
   intl: ^0.18.1
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:
