@@ -103,8 +103,8 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: const FloatingActionButton(
           onPressed: null,
           shape: CircleBorder(),
-          child: Icon(Icons.qr_code, color: white),
           backgroundColor: blue,
+          child: Icon(Icons.qr_code, color: white),
         ));
   }
 }
@@ -115,55 +115,84 @@ class AuthenticationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.blue,
-          title: const Text("Authenticate"),
-        ),
-        body: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.fingerprint_outlined),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                  onPressed: () async {
-                    bool isBiometricAvailable =
-                        await LocalAuth.canAuthenticate();
+        backgroundColor: white,
+        body: Center(
+          child: Column(children: [
+            Container(
+              height: 150,
+              width: 450,
+              decoration: const BoxDecoration(
+                  color: red,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30))),
+              child: const Padding(
+                padding: EdgeInsets.all(40.0),
+                child: Text(
+                  'Login',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(color: white, fontSize: 48),
+                ),
+              ),
+            ),
+            const SizedBox(height: 40),
+            const Text('You can login directly with fingerprint.',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 67, 66, 66),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                )),
+            const SizedBox(height: 60),
+            const Icon(Icons.fingerprint_outlined, size: 200, color: red),
+            const SizedBox(height: 80),
+            ElevatedButton(
+              onPressed: () async {
+                bool isBiometricAvailable = await LocalAuth.canAuthenticate();
 
-                    if (isBiometricAvailable) {
-                      bool authorized = await LocalAuth.authenticate();
-                      if (authorized) {
-                        if (!context.mounted) return;
-                        Navigator.of(context).pop();
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => const HomePage()));
-                      }
-                    } else {
-                      if (!context.mounted) return;
-                      showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                                title: const Text("Biometrics Unavailable"),
-                                content: const Text(
-                                    "Biometric authentication is not available"),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (_) =>
-                                                    const HomePage()));
-                                      },
-                                      child:
-                                          const Center(child: Text("Continue")))
-                                ],
-                              ));
-                    }
-                  },
-                  child: const Center(
-                    child: Text("Authenticate"),
-                  ))
-            ]));
+                if (isBiometricAvailable) {
+                  bool authorized = await LocalAuth.authenticate();
+                  if (authorized) {
+                    if (!context.mounted) return;
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const HomePage()));
+                  }
+                } else {
+                  if (!context.mounted) return;
+                  showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                            title: const Text("Biometrics Unavailable"),
+                            content: const Text(
+                                "Biometric authentication is not available"),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (_) => const HomePage()));
+                                  },
+                                  child: const Center(child: Text("Continue")))
+                            ],
+                          ));
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: blue,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  fixedSize: const Size.fromWidth(300),
+                  shadowColor: Colors.black),
+              child: const Center(
+                child: Text(
+                  "Authenticate",
+                  style: TextStyle(color: white, fontSize: 24),
+                ),
+              ),
+            )
+          ]),
+        ));
   }
 }
