@@ -2,47 +2,81 @@ import 'package:flutter/material.dart';
 import 'package:nagarik/my_buttons.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:nagarik/my_colors.dart';
+import 'package:nagarik/bottom_nav_bar.dart';
 
-SingleChildScrollView home() {
-  return SingleChildScrollView(
-      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-    TopServices(items: [
-      TopServicesItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-      TopServicesItem(icon: Icons.credit_card, label: "PAN", onTap: null),
-      TopServicesItem(icon: Icons.credit_card, label: "Passport", onTap: null),
-    ], bgColor: lightBlue, fgColor: blue),
-    IssuedDocuments(documents: [
-      IssuedDocumentItem(
-          title: "Citizenship",
-          id: "77-01-75-01554",
-          subtitle: "Ministry of Home Affairs"),
-      IssuedDocumentItem(
-          title: "Citizenship",
-          id: "77-01-75-01554",
-          subtitle: "Ministry of Home Affairs"),
-      IssuedDocumentItem(
-          title: "Citizenship",
-          id: "77-01-75-01554",
-          subtitle: "Ministry of Home Affairs"),
-    ]),
-    const AllServices(services: [
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-      ServicesListItem(
-          icon: Icons.credit_card, label: "Citizenship", onTap: null),
-    ])
-  ]));
+class Home extends StatelessWidget {
+  const Home({required this.switchTab, super.key});
+
+  final void Function(int index) switchTab;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: pastel,
+          title: const Text("Hi, John"),
+          toolbarHeight: 50,
+          leadingWidth: 100,
+          leading: Container(
+            decoration: const BoxDecoration(shape: BoxShape.circle),
+            clipBehavior: Clip.hardEdge,
+            child: const Image(
+                image: NetworkImage("https://plchldr.co/i/500x250")),
+          ),
+          actions: const [
+            IconButton(onPressed: null, icon: Icon(Icons.more_vert))
+          ],
+        ),
+        body: SingleChildScrollView(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+          TopServices(items: [
+            TopServicesItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            TopServicesItem(icon: Icons.credit_card, label: "PAN", onTap: null),
+            TopServicesItem(
+                icon: Icons.credit_card, label: "Passport", onTap: null),
+          ], bgColor: lightBlue, fgColor: blue),
+          IssuedDocuments(documents: [
+            IssuedDocumentItem(
+                title: "Citizenship",
+                id: "77-01-75-01554",
+                subtitle: "Ministry of Home Affairs"),
+            IssuedDocumentItem(
+                title: "Citizenship",
+                id: "77-01-75-01554",
+                subtitle: "Ministry of Home Affairs"),
+            IssuedDocumentItem(
+                title: "Citizenship",
+                id: "77-01-75-01554",
+                subtitle: "Ministry of Home Affairs"),
+          ]),
+          const AllServices(services: [
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+            ServicesListItem(
+                icon: Icons.credit_card, label: "Citizenship", onTap: null),
+          ])
+        ])),
+        bottomNavigationBar: MyBottomNavBar(currentTabIndex: 0, switchTab: switchTab,),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: const FloatingActionButton(
+          onPressed: null,
+          shape: CircleBorder(),
+          backgroundColor: blue,
+          child: Icon(Icons.qr_code, color: white),
+        ));
+  }
 }
 
 class TopServices extends StatelessWidget {

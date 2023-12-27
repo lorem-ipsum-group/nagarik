@@ -11,8 +11,67 @@ void main() {
   runApp(const MyApp());
 }
 
+var issuedDocuments = [
+  DocumentTileItem(
+      title: "Citizenship",
+      id: "xxxxxxxxxx",
+      unlink: null,
+      subtitle: "Ministry of Home Affairs")
+];
+
+var notifications = [
+  NotificationTileItem(
+      title: "Alert",
+      dateTime: DateTime.now(),
+      message:
+          "This is an alert! Hello there general Kenobi. Trying to make this multiline")
+];
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "nagarik app",
+      theme: ThemeData(
+        textTheme:
+        GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme)),
+      debugShowCheckedModeBanner: false,
+      home: const AuthenticationPage()
+    );
+  }
+}
+
+class Root extends StatefulWidget {
+  const Root({super.key});
+
+  @override
+  State<Root> createState() => _RootState();
+}
+
+class _RootState extends State<Root> {
+  int _currentTabIndex = 0;
+
+  void switchTab(int index) {
+    setState(() {
+      _currentTabIndex = index;
+    });
+  }
+
+  late List<Widget> tabs;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    tabs = <Widget>[
+      Home(switchTab: switchTab),
+      Documents(switchTab: switchTab, issuedDocuments: issuedDocuments),
+      Notifications(switchTab: switchTab, notifications: notifications),
+      Profile(switchTab: switchTab,),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,146 +81,7 @@ class MyApp extends StatelessWidget {
             textTheme:
                 GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme)),
         debugShowCheckedModeBanner: false,
-        home: AuthenticationPage());
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  final tabs = const [
-    home,
-    documents,
-    notifications,
-    profile,
-  ];
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int _currentTabIndex = 0;
-
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        key: scaffoldKey,
-        appBar: AppBar(
-          backgroundColor: pastel,
-          title: const Text("Hi, John"),
-          toolbarHeight: 50,
-          leadingWidth: 100,
-          leading: Container(
-            decoration: const BoxDecoration(shape: BoxShape.circle),
-            clipBehavior: Clip.hardEdge,
-            child: const Image(
-                image: NetworkImage("https://plchldr.co/i/500x250")),
-          ),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  scaffoldKey.currentState?.openEndDrawer();
-                },
-                icon: const Icon(Icons.more_vert))
-          ],
-        ),
-        endDrawer: Drawer(
-          elevation: 5,
-          backgroundColor: white,
-          width: 220,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                decoration: const BoxDecoration(
-                  color: lightBlue,
-                ),
-                child: Center(
-                  child:
-                      Image.asset('assets/logo.png', width: 100, height: 100),
-                ),
-              ),
-              ListTile(
-                title: const Center(
-                    child: Text('Live Chat',
-                        style: TextStyle(
-                            color: lightGrey, fontWeight: FontWeight.w400))),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: const Center(
-                    child: Text(
-                  'Logout',
-                  style:
-                      TextStyle(color: lightGrey, fontWeight: FontWeight.w400),
-                )),
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => AuthenticationPage()),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-        body: widget.tabs[_currentTabIndex](),
-        bottomNavigationBar: BottomAppBar(
-          elevation: 50,
-          height: 80,
-          notchMargin: 6.0,
-          shape: const CircularNotchedRectangle(),
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-          shadowColor: Colors.black,
-          surfaceTintColor: pastel,
-          color: pastel,
-          child: Theme(
-            data: ThemeData(
-                splashColor: Colors.transparent,
-                textTheme:
-                    GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme)),
-            child: BottomNavigationBar(
-              elevation: 0,
-              currentIndex: _currentTabIndex,
-              type: BottomNavigationBarType.fixed,
-              fixedColor: red,
-              unselectedItemColor: red,
-              backgroundColor: Colors.transparent,
-              iconSize: 20,
-              selectedIconTheme: const IconThemeData(size: 30),
-              onTap: (int index) {
-                setState(() {
-                  _currentTabIndex = index;
-                });
-              },
-              items: const [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.home_filled), label: "Home"),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.document_scanner), label: "Documents"),
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.notifications,
-                    ),
-                    label: "Notifications"),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.person), label: "Profile"),
-              ],
-            ),
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: const FloatingActionButton(
-          onPressed: null,
-          shape: CircleBorder(),
-          backgroundColor: blue,
-          child: Icon(Icons.qr_code, color: white),
-        ));
+        home: tabs[_currentTabIndex]);
   }
 }
 
@@ -171,6 +91,10 @@ class AuthenticationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: lightBlue,
+          title: const Text("Authenticate"),
+        ),
         backgroundColor: white,
         body: Center(
           child: Column(children: [
@@ -211,8 +135,8 @@ class AuthenticationPage extends StatelessWidget {
                   if (authorized) {
                     if (!context.mounted) return;
                     Navigator.of(context).pop();
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const HomePage()));
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (_) => const Root()));
                   }
                 } else {
                   if (!context.mounted) return;
@@ -228,7 +152,7 @@ class AuthenticationPage extends StatelessWidget {
                                     Navigator.of(context).pop();
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
-                                            builder: (_) => const HomePage()));
+                                            builder: (_) => const Root()));
                                   },
                                   child: const Center(child: Text("Continue")))
                             ],
