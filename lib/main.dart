@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nagarik/local_auth_interface.dart';
-import 'package:nagarik/home.dart~';
+import 'package:nagarik/home.dart';
 import 'package:nagarik/documents.dart';
 import 'package:nagarik/notifications.dart';
 import 'package:nagarik/profile.dart';
@@ -103,7 +103,8 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: const FloatingActionButton(
           onPressed: null,
           shape: CircleBorder(),
-          child: Icon(Icons.qr_code),
+          child: Icon(Icons.qr_code, color: white),
+          backgroundColor: blue,
         ));
   }
 }
