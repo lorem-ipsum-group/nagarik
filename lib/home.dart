@@ -3,7 +3,11 @@ import 'package:nagarik/my_buttons.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:nagarik/my_colors.dart';
 
-SingleChildScrollView home() {
+class Home extends StatelessWidget{
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
   return SingleChildScrollView(
       child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
     TopServices(
@@ -50,6 +54,7 @@ SingleChildScrollView home() {
           icon: Icons.credit_card, label: "Citizenship", onTap: null),
     ])
   ]));
+  }
 }
 
 class TopServices extends StatelessWidget {

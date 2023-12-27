@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nagarik/local_auth_interface.dart';
-import 'package:nagarik/home.dart~';
+import 'package:nagarik/home.dart';
 import 'package:nagarik/documents.dart';
 import 'package:nagarik/notifications.dart';
 import 'package:nagarik/profile.dart';
@@ -10,26 +10,34 @@ void main() {
   runApp(const MyApp());
 }
 
+var issuedDocuments = [
+  DocumentTileItem(title: "Citizenship", id: "xxxxxxxxxx", unlink: null)
+];
+
+var notifications = [
+  NotificationTileItem(title: "Alert", dateTime: DateTime.now(), message: "This is an alert! Hello there general Kenobi. Trying to make this multiline")
+];
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
         title: "nagarik app",
         debugShowCheckedModeBanner: false,
-        home: AuthenticationPage());
+        home: HomePage());
   }
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
-  final tabs = const [
-    home,
-    documents,
-    notifications,
-    profile,
+  final List<Widget> tabs = <Widget>[
+    const Home(),
+    Documents(issuedDocuments: issuedDocuments,),
+    Notifications(notifications: notifications),
+    const Profile()
   ];
 
   @override
@@ -57,7 +65,7 @@ class _HomePageState extends State<HomePage> {
             IconButton(onPressed: null, icon: Icon(Icons.more_vert))
           ],
         ),
-        body: widget.tabs[_currentTabIndex](),
+        body: (widget.tabs[_currentTabIndex]),
         bottomNavigationBar: BottomAppBar(
           elevation: 50,
           height: 80,
@@ -115,7 +123,7 @@ class AuthenticationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blue,
+          backgroundColor: lightBlue,
           title: const Text("Authenticate"),
         ),
         body: Column(
@@ -135,7 +143,7 @@ class AuthenticationPage extends StatelessWidget {
                         if (!context.mounted) return;
                         Navigator.of(context).pop();
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => const HomePage()));
+                            builder: (_) => HomePage()));
                       }
                     } else {
                       if (!context.mounted) return;
@@ -152,7 +160,7 @@ class AuthenticationPage extends StatelessWidget {
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
                                                 builder: (_) =>
-                                                    const HomePage()));
+                                                    HomePage()));
                                       },
                                       child:
                                           const Center(child: Text("Continue")))
