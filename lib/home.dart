@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:nagarik/main.dart';
 import 'package:nagarik/my_buttons.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:nagarik/my_colors.dart';
 import 'package:nagarik/bottom_nav_bar.dart';
 
 class Home extends StatelessWidget {
-  const Home({required this.switchTab, super.key});
+  Home({required this.switchTab, super.key});
 
   final void Function(int index) switchTab;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: scaffoldKey,
         appBar: AppBar(
           backgroundColor: pastel,
           title: const Text("Hi, John"),
@@ -23,9 +26,55 @@ class Home extends StatelessWidget {
             child: const Image(
                 image: NetworkImage("https://plchldr.co/i/500x250")),
           ),
-          actions: const [
-            IconButton(onPressed: null, icon: Icon(Icons.more_vert))
+          actions: [
+            IconButton(
+                onPressed: () {
+                  scaffoldKey.currentState?.openEndDrawer();
+                },
+                icon: const Icon(Icons.more_vert))
           ],
+        ),
+        endDrawer: Drawer(
+          elevation: 5,
+          backgroundColor: white,
+          width: 220,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: const BoxDecoration(
+                  color: lightBlue,
+                ),
+                child: Center(
+                  child:
+                      Image.asset('assets/logo.png', width: 100, height: 100),
+                ),
+              ),
+              ListTile(
+                title: const Center(
+                    child: Text('Live Chat',
+                        style: TextStyle(
+                            color: lightGrey, fontWeight: FontWeight.w400))),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Center(
+                    child: Text(
+                  'Logout',
+                  style:
+                      TextStyle(color: lightGrey, fontWeight: FontWeight.w400),
+                )),
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => AuthenticationPage()),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
         body: SingleChildScrollView(
             child:
@@ -68,7 +117,10 @@ class Home extends StatelessWidget {
                 icon: Icons.credit_card, label: "Citizenship", onTap: null),
           ])
         ])),
-        bottomNavigationBar: MyBottomNavBar(currentTabIndex: 0, switchTab: switchTab,),
+        bottomNavigationBar: MyBottomNavBar(
+          currentTabIndex: 0,
+          switchTab: switchTab,
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: const FloatingActionButton(
           onPressed: null,

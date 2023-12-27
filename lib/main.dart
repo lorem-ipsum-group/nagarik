@@ -33,13 +33,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "nagarik app",
-      theme: ThemeData(
-        textTheme:
-        GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme)),
-      debugShowCheckedModeBanner: false,
-      home: const AuthenticationPage()
-    );
+        title: "nagarik app",
+        theme: ThemeData(
+            textTheme:
+                GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme)),
+        debugShowCheckedModeBanner: false,
+        home: const AuthenticationPage());
   }
 }
 
@@ -64,12 +63,14 @@ class _RootState extends State<Root> {
   @override
   void initState() {
     super.initState();
-    
+
     tabs = <Widget>[
       Home(switchTab: switchTab),
       Documents(switchTab: switchTab, issuedDocuments: issuedDocuments),
       Notifications(switchTab: switchTab, notifications: notifications),
-      Profile(switchTab: switchTab,),
+      Profile(
+        switchTab: switchTab,
+      ),
     ];
   }
 

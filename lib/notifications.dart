@@ -13,7 +13,8 @@ class NotificationTileItem {
 }
 
 class Notifications extends StatelessWidget {
-  const Notifications({required this.switchTab, required this.notifications, super.key});
+  const Notifications(
+      {required this.switchTab, required this.notifications, super.key});
 
   final List<NotificationTileItem> notifications;
   final void Function(int index) switchTab;
@@ -30,15 +31,18 @@ class Notifications extends StatelessWidget {
           ],
         ),
         body: Container(
-          padding: const EdgeInsets.all(10),
-          child: Expanded(
-            child: ListView.builder(
-              itemCount: notifications.length,
-              itemBuilder: (context, index) {
-                return notificationTile(notifications[index]);
-            }),
-        )),
-        bottomNavigationBar: MyBottomNavBar(currentTabIndex: 3, switchTab: switchTab,),
+            padding: const EdgeInsets.all(10),
+            child: Expanded(
+              child: ListView.builder(
+                  itemCount: notifications.length,
+                  itemBuilder: (context, index) {
+                    return notificationTile(notifications[index]);
+                  }),
+            )),
+        bottomNavigationBar: MyBottomNavBar(
+          currentTabIndex: 3,
+          switchTab: switchTab,
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: const FloatingActionButton(
           onPressed: null,
@@ -54,35 +58,40 @@ Container notificationTile(NotificationTileItem item) {
     padding: const EdgeInsets.all(10),
     margin: const EdgeInsets.all(5),
     decoration: BoxDecoration(
-      border: Border.all(color: blue),
-      borderRadius: BorderRadius.circular(10)
-    ),
-
+        border: Border.all(color: blue),
+        borderRadius: BorderRadius.circular(10)),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
-
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
-
           children: [
-            const Icon(Icons.notification_important, fill: 1.0, color: blue, size: 50,),
-            const SizedBox(width: 10,),
+            const Icon(
+              Icons.notification_important,
+              fill: 1.0,
+              color: blue,
+              size: 50,
+            ),
+            const SizedBox(
+              width: 10,
+            ),
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              
-              children: [
-                Text(item.title, style: const TextStyle(fontSize: 18, color: blue),),
-                Text(DateFormat("yyyy-MM-dd").format(item.dateTime))
-              ]
-            )
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.title,
+                    style: const TextStyle(fontSize: 18, color: blue),
+                  ),
+                  Text(DateFormat("yyyy-MM-dd").format(item.dateTime))
+                ])
           ],
         ),
-
-        const SizedBox(height: 10,),
+        const SizedBox(
+          height: 10,
+        ),
         Text(item.message)
       ],
     ),

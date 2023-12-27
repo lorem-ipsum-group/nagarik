@@ -3,11 +3,8 @@ import 'package:nagarik/my_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyBottomNavBar extends StatelessWidget {
-  const MyBottomNavBar({
-    required this.currentTabIndex,
-    required this.switchTab,
-    super.key
-  });
+  const MyBottomNavBar(
+      {required this.currentTabIndex, required this.switchTab, super.key});
 
   final int currentTabIndex;
   final void Function(int index) switchTab;
