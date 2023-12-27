@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nagarik/local_auth_interface.dart';
 import 'package:nagarik/home.dart';
 import 'package:nagarik/documents.dart';
@@ -15,8 +16,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
         title: "nagarik app",
+        theme: ThemeData(
+            textTheme:
+                GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme)),
         debugShowCheckedModeBanner: false,
         home: AuthenticationPage());
   }
@@ -68,7 +72,10 @@ class _HomePageState extends State<HomePage> {
           surfaceTintColor: pastel,
           color: pastel,
           child: Theme(
-            data: ThemeData(splashColor: Colors.transparent),
+            data: ThemeData(
+                splashColor: Colors.transparent,
+                textTheme:
+                    GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme)),
             child: BottomNavigationBar(
               elevation: 0,
               currentIndex: _currentTabIndex,

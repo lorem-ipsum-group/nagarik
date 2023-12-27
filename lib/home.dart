@@ -74,7 +74,7 @@ class TopServices extends StatelessWidget {
             const Text(
               "Top Services",
               style: TextStyle(
-                  fontSize: 25, color: red, fontWeight: FontWeight.w500),
+                  fontSize: 25, color: red, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 20),
             Row(
@@ -126,7 +126,7 @@ class IssuedDocumentsState extends State<IssuedDocuments> {
                       style: TextStyle(
                           fontSize: 25,
                           color: red,
-                          fontWeight: FontWeight.w500),
+                          fontWeight: FontWeight.w600),
                     ),
                     IconButton(
                         onPressed: null,
@@ -200,7 +200,7 @@ class AllServices extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 25,
                     color: red,
-                    fontWeight: FontWeight.w500),
+                    fontWeight: FontWeight.w600),
               ),
               GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
