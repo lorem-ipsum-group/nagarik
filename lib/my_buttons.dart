@@ -2,41 +2,56 @@ import 'package:flutter/material.dart';
 import 'package:nagarik/my_colors.dart';
 
 class TopServicesItem {
-  TopServicesItem({required this.icon, required this.label, required this.onTap});
-  
+  TopServicesItem(
+      {required this.icon, required this.label, required this.onTap});
+
   IconData icon;
   String label;
   void Function()? onTap;
 }
 
-ElevatedButton myTileButton(Color bgColor, Color fgColor, IconData icon, String label, {double fontSize = 14, void Function()? onTap}) {
+ElevatedButton myTileButton(
+    Color bgColor, Color fgColor, IconData icon, String label,
+    {double fontSize = 14, void Function()? onTap}) {
   return ElevatedButton(
     onPressed: onTap,
-    
     style: ButtonStyle(
-      backgroundColor:MaterialStateProperty.all(bgColor),
-      surfaceTintColor:MaterialStateProperty.all(bgColor),
-      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+      backgroundColor: MaterialStateProperty.all(bgColor),
+      surfaceTintColor: MaterialStateProperty.all(bgColor),
+      shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
       fixedSize: MaterialStateProperty.all(const Size(100, 100)),
-      padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 20, horizontal: 10)),
+      padding: MaterialStateProperty.all(
+          const EdgeInsets.symmetric(vertical: 20, horizontal: 10)),
       shadowColor: MaterialStateProperty.all(Colors.black),
       elevation: MaterialStateProperty.all(5),
     ),
-    
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon,  ),
-        const Spacer(flex: 2,),
-        Text(label, style: TextStyle(color: fgColor, fontSize: fontSize),)
+        Icon(
+          icon,
+        ),
+        const Spacer(
+          flex: 2,
+        ),
+        Text(
+          label,
+          style: TextStyle(color: fgColor, fontSize: fontSize),
+        )
       ],
     ),
   );
 }
 
 class IssuedDocumentItem {
-  IssuedDocumentItem({required this.title, required this.id, this.subtitle, this.image, this.onTap});
-  
+  IssuedDocumentItem(
+      {required this.title,
+      required this.id,
+      this.subtitle,
+      this.image,
+      this.onTap});
+
   String title;
   String? subtitle;
   String id;
@@ -112,7 +127,6 @@ class ServicesListItem {
   final void Function()? onTap;
 }
 
-
 ElevatedButton myGridButton(ServicesListItem item, Color color) {
   return ElevatedButton(
     onPressed: item.onTap,
@@ -121,9 +135,7 @@ ElevatedButton myGridButton(ServicesListItem item, Color color) {
       surfaceTintColor: MaterialStatePropertyAll(Colors.transparent),
       elevation: MaterialStatePropertyAll(0),
       padding: MaterialStatePropertyAll(EdgeInsets.all(0)),
-      
     ),
-    
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,

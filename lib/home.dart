@@ -6,18 +6,12 @@ import 'package:nagarik/my_colors.dart';
 SingleChildScrollView home() {
   return SingleChildScrollView(
       child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-    TopServices(
-        items: [
-          TopServicesItem(
-              icon: Icons.credit_card, label: "Citizenship", onTap: null),
-          TopServicesItem(icon: Icons.credit_card, label: "PAN", onTap: null),
-          TopServicesItem(
-              icon: Icons.credit_card, label: "Passport", onTap: null),
-        ],
-        bgColor: lightBlue,
-        fgColor: blue
-      ),
-      
+    TopServices(items: [
+      TopServicesItem(
+          icon: Icons.credit_card, label: "Citizenship", onTap: null),
+      TopServicesItem(icon: Icons.credit_card, label: "PAN", onTap: null),
+      TopServicesItem(icon: Icons.credit_card, label: "Passport", onTap: null),
+    ], bgColor: lightBlue, fgColor: blue),
     IssuedDocuments(documents: [
       IssuedDocumentItem(
           title: "Citizenship",
@@ -32,7 +26,6 @@ SingleChildScrollView home() {
           id: "77-01-75-01554",
           subtitle: "Ministry of Home Affairs"),
     ]),
-    
     const AllServices(services: [
       ServicesListItem(
           icon: Icons.credit_card, label: "Citizenship", onTap: null),
@@ -168,9 +161,7 @@ class IssuedDocumentsState extends State<IssuedDocuments> {
                             vertical: 8.0, horizontal: 4.0),
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: entry.key == _currentPage
-                                ? red
-                                : fadedRed)),
+                            color: entry.key == _currentPage ? red : fadedRed)),
                   );
                 }).toList(),
               )
@@ -179,10 +170,7 @@ class IssuedDocumentsState extends State<IssuedDocuments> {
 }
 
 class AllServices extends StatelessWidget {
-  const AllServices(
-      {required this.services,
-      this.fgColor = blue,
-      super.key});
+  const AllServices({required this.services, this.fgColor = blue, super.key});
 
   final List<ServicesListItem> services;
   final Color fgColor;
@@ -198,9 +186,7 @@ class AllServices extends StatelessWidget {
               const Text(
                 "All Services",
                 style: TextStyle(
-                    fontSize: 25,
-                    color: red,
-                    fontWeight: FontWeight.w600),
+                    fontSize: 25, color: red, fontWeight: FontWeight.w600),
               ),
               GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

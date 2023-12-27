@@ -43,9 +43,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentTabIndex = 0;
 
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: scaffoldKey,
         appBar: AppBar(
           backgroundColor: pastel,
           title: const Text("Hi, John"),
@@ -57,9 +60,55 @@ class _HomePageState extends State<HomePage> {
             child: const Image(
                 image: NetworkImage("https://plchldr.co/i/500x250")),
           ),
-          actions: const [
-            IconButton(onPressed: null, icon: Icon(Icons.more_vert))
+          actions: [
+            IconButton(
+                onPressed: () {
+                  scaffoldKey.currentState?.openEndDrawer();
+                },
+                icon: const Icon(Icons.more_vert))
           ],
+        ),
+        endDrawer: Drawer(
+          elevation: 5,
+          backgroundColor: white,
+          width: 220,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: const BoxDecoration(
+                  color: lightBlue,
+                ),
+                child: Center(
+                  child:
+                      Image.asset('assets/logo.png', width: 100, height: 100),
+                ),
+              ),
+              ListTile(
+                title: const Center(
+                    child: Text('Live Chat',
+                        style: TextStyle(
+                            color: lightGrey, fontWeight: FontWeight.w400))),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Center(
+                    child: Text(
+                  'Logout',
+                  style:
+                      TextStyle(color: lightGrey, fontWeight: FontWeight.w400),
+                )),
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => AuthenticationPage()),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
         body: widget.tabs[_currentTabIndex](),
         bottomNavigationBar: BottomAppBar(
