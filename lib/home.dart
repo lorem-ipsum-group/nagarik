@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nagarik/chat_screen.dart';
 import 'package:nagarik/main.dart';
 import 'package:nagarik/my_buttons.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -56,7 +57,7 @@ class Home extends StatelessWidget {
                         style: TextStyle(
                             color: lightGrey, fontWeight: FontWeight.w400))),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ChatScreen()) );
                 },
               ),
               ListTile(
