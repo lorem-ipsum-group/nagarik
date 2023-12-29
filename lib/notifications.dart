@@ -40,7 +40,7 @@ class Notifications extends StatelessWidget {
                   }),
             )),
         bottomNavigationBar: MyBottomNavBar(
-          currentTabIndex: 3,
+          currentTabIndex: 2,
           switchTab: switchTab,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
