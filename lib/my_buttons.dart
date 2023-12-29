@@ -3,15 +3,15 @@ import 'package:nagarik/my_colors.dart';
 
 class TopServicesItem {
   TopServicesItem(
-      {required this.icon, required this.label, required this.onTap});
+      {required this.image, required this.label, required this.onTap});
 
-  IconData icon;
+  ImageProvider image;
   String label;
   void Function()? onTap;
 }
 
 ElevatedButton myTileButton(
-    Color bgColor, Color fgColor, IconData icon, String label,
+    Color bgColor, Color fgColor, ImageProvider image, String label,
     {double fontSize = 14, void Function()? onTap}) {
   return ElevatedButton(
     onPressed: onTap,
@@ -22,15 +22,15 @@ ElevatedButton myTileButton(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
       fixedSize: MaterialStateProperty.all(const Size(100, 100)),
       padding: MaterialStateProperty.all(
-          const EdgeInsets.symmetric(vertical: 20, horizontal: 10)),
+          const EdgeInsets.symmetric(vertical: 18, horizontal: 10)),
       shadowColor: MaterialStateProperty.all(Colors.black),
       elevation: MaterialStateProperty.all(5),
     ),
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          icon,
+        Image(
+          image:image,
         ),
         const Spacer(
           flex: 2,
@@ -38,6 +38,7 @@ ElevatedButton myTileButton(
         Text(
           label,
           style: TextStyle(color: fgColor, fontSize: fontSize),
+          textAlign: TextAlign.center,
         )
       ],
     ),
@@ -149,7 +150,8 @@ ElevatedButton myGridButton(ServicesListItem item, Color color) {
         ),
         Text(
           item.label,
-          style: TextStyle(color: color),
+          style: TextStyle(color: color, fontSize: 12),
+          textAlign: TextAlign.center,
         )
       ],
     ),

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:nagarik/my_colors.dart';
 import 'package:nagarik/bottom_nav_bar.dart';
+import 'package:nagarik/my_drawer.dart';
 
 class ProfileMenuWidget extends StatelessWidget {
   const ProfileMenuWidget({
@@ -52,19 +53,26 @@ class ProfileMenuWidget extends StatelessWidget {
 }
 
 class Profile extends StatelessWidget {
-  const Profile({required this.switchTab, super.key});
+  Profile({required this.switchTab, super.key});
 
   final void Function(int index) switchTab;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
         appBar: AppBar(
           backgroundColor: pastel,
           title: const Text("Profile"),
           toolbarHeight: 50,
-          actions: const [
-            IconButton(onPressed: null, icon: Icon(Icons.more_vert))
+          actions: [
+            IconButton(
+              onPressed: () {
+                scaffoldKey.currentState?.openEndDrawer();
+              },
+              icon: const Icon(Icons.more_vert))
           ],
         ),
         body: SingleChildScrollView(
@@ -164,6 +172,9 @@ class Profile extends StatelessWidget {
                     ),
                   ),
                 ]))),
+
+        endDrawer: myDrawer(context),
+        
         bottomNavigationBar: MyBottomNavBar(
           currentTabIndex: 3,
           switchTab: switchTab,

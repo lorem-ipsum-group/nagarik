@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nagarik/my_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:nagarik/bottom_nav_bar.dart';
+import 'package:nagarik/my_drawer.dart';
 
 class NotificationTileItem {
   const NotificationTileItem(
@@ -13,31 +14,39 @@ class NotificationTileItem {
 }
 
 class Notifications extends StatelessWidget {
-  const Notifications(
+  Notifications(
       {required this.switchTab, required this.notifications, super.key});
 
   final List<NotificationTileItem> notifications;
   final void Function(int index) switchTab;
 
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: scaffoldKey,
         appBar: AppBar(
           backgroundColor: pastel,
           title: const Text("Notifications"),
           toolbarHeight: 50,
-          actions: const [
-            IconButton(onPressed: null, icon: Icon(Icons.more_vert))
+          actions: [
+            IconButton(
+                onPressed: () {
+                  scaffoldKey.currentState?.openEndDrawer();
+                },
+                icon: const Icon(Icons.more_vert))
           ],
         ),
         body: Container(
-            padding: const EdgeInsets.all(10),
-            child: ListView.builder(
+          padding: const EdgeInsets.all(10),
+          child: ListView.builder(
               itemCount: notifications.length,
               itemBuilder: (context, index) {
                 return notificationTile(notifications[index]);
-            }),
-          ),
+              }),
+        ),
+        endDrawer: myDrawer(context),
         bottomNavigationBar: MyBottomNavBar(
           currentTabIndex: 2,
           switchTab: switchTab,

@@ -1,6 +1,7 @@
 import 'package:nagarik/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:nagarik/bottom_nav_bar.dart';
+import 'package:nagarik/my_drawer.dart';
 
 enum DocumentListType { issuedDocuments, uploadedDocuments }
 
@@ -40,15 +41,22 @@ class Documents extends StatefulWidget {
 }
 
 class DocumentsState extends State<Documents> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          key: scaffoldKey,
           backgroundColor: pastel,
           title: const Text("Documents"),
           toolbarHeight: 50,
-          actions: const [
-            IconButton(onPressed: null, icon: Icon(Icons.more_vert))
+          actions: [
+            IconButton(
+              onPressed: () {
+                scaffoldKey.currentState?.openEndDrawer();
+              },
+              icon: const Icon(Icons.more_vert))
           ],
         ),
         body: Column(
@@ -127,6 +135,9 @@ class DocumentsState extends State<Documents> {
             ))
           ],
         ),
+
+        endDrawer: myDrawer(context),
+        
         bottomNavigationBar: MyBottomNavBar(
           currentTabIndex: 1,
           switchTab: widget.switchTab,

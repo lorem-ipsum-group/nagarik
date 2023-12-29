@@ -71,7 +71,12 @@ flutter:
   assets:
     - assets/emblem.png
     - assets/logo.png
-
+    - assets/onboarding-1.png
+    - assets/onboarding-2.png
+    - assets/Citizenship.png
+    - assets/PAN logo.png
+    - assets/Passport Card.png
+    - assets/NID.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

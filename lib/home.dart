@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:nagarik/chat_screen.dart';
-import 'package:nagarik/main.dart';
 import 'package:nagarik/my_buttons.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:nagarik/my_colors.dart';
 import 'package:nagarik/bottom_nav_bar.dart';
 import 'package:nagarik/my_document.dart';
+import 'package:nagarik/my_drawer.dart';
 
 bool userNameFetched = false;
 String userName = "";
@@ -63,103 +62,71 @@ class Home extends StatelessWidget {
                       icon: const Icon(Icons.more_vert))
                 ],
               ),
-              endDrawer: Drawer(
-                elevation: 5,
-                backgroundColor: white,
-                width: 220,
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    DrawerHeader(
-                      decoration: const BoxDecoration(
-                        color: lightBlue,
-                      ),
-                      child: Center(
-                        child: Image.asset('assets/logo.png',
-                            width: 100, height: 100),
-                      ),
-                    ),
-                    ListTile(
-                      title: const Center(
-                          child: Text('Live Chat',
-                              style: TextStyle(
-                                  color: lightGrey,
-                                  fontWeight: FontWeight.w400))),
-                      onTap: () {
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => ChatScreen()));
-                      },
-                    ),
-                    ListTile(
-                      title: const Center(
-                          child: Text(
-                        'Logout',
-                        style: TextStyle(
-                            color: lightGrey, fontWeight: FontWeight.w400),
-                      )),
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => AuthenticationPage()),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              endDrawer: myDrawer(context),
               body: SingleChildScrollView(
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                     TopServices(items: [
                       TopServicesItem(
-                          icon: Icons.credit_card,
+                          image: AssetImage('assets/Citizenship.png'),
                           label: "Citizenship",
-                          onTap: () => Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (_) => Document(type: DocumentType.Citizenship,)))),
+                          onTap: () =>
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => Document(
+                                        type: DocumentType.Citizenship,
+                                      )))),
                       TopServicesItem(
-                          icon: Icons.credit_card, label: "PAN", onTap: () => Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (_) => Document(type: DocumentType.Citizenship,)))),
+                          image: AssetImage('assets/PAN logo.png'),
+                          label: "PAN",
+                          onTap: null),
                       TopServicesItem(
-                          icon: Icons.credit_card,
+                          image: AssetImage('assets/Passport Card.png'),
                           label: "Passport",
-                          onTap: () => Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (_) => Document(type: DocumentType.Citizenship,)))),
+                          onTap: null),
+                      TopServicesItem(
+                          image: AssetImage('assets/NID.png'),
+                          label: "NID",
+                          onTap: null),
                     ], bgColor: lightBlue, fgColor: blue),
                     IssuedDocuments(
                       documents: documents,
-                      switchTab: switchTab,
+                      switchTab: (_) => switchTab(1),
                     ),
-                    AllServices(services: [
+                    const AllServices(services: [
                       ServicesListItem(
-                          icon: Icons.credit_card,
-                          label: "Citizenship",
-                          onTap: () => Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (_) => Document(type: DocumentType.Citizenship,)))),
-                      const ServicesListItem(
-                          icon: Icons.credit_card,
-                          label: "PAN",
+                          icon: Icons.local_police,
+                          label: "Police Clearance Report",
                           onTap: null),
-                      const ServicesListItem(
-                          icon: Icons.credit_card,
-                          label: "Passport",
+                      ServicesListItem(
+                          icon: Icons.how_to_vote,
+                          label: "Voter Card",
                           onTap: null),
-                      const ServicesListItem(
-                          icon: Icons.credit_card,
-                          label: "NID",
+                      ServicesListItem(
+                          icon: Icons.vaccines,
+                          label: "Covid Vaccination",
                           onTap: null),
-                      const ServicesListItem(
-                          icon: Icons.credit_card,
-                          label: "Education",
+                      ServicesListItem(
+                          icon: Icons.vertical_split_sharp,
+                          label: "Press ID Card",
                           onTap: null),
-                      const ServicesListItem(
-                          icon: Icons.credit_card,
-                          label: "NOC",
+                      ServicesListItem(
+                          icon: Icons.security,
+                          label: "Social Security Fund",
                           onTap: null),
-                      const ServicesListItem(
-                          icon: Icons.credit_card,
-                          label: "Complaints",
+                      ServicesListItem(
+                          icon: Icons.feedback,
+                          label: "My Complains",
+                          onTap: null),
+                      ServicesListItem(
+                          icon: Icons.home_work, label: "Malpot", onTap: null),
+                      ServicesListItem(
+                          icon: Icons.health_and_safety,
+                          label: "Health Insurance",
+                          onTap: null),
+                      ServicesListItem(
+                          icon: Icons.emoji_people,
+                          label: "Employee Provident Fund",
                           onTap: null),
                     ])
                   ])),
@@ -182,8 +149,8 @@ class Home extends StatelessWidget {
 class TopServices extends StatelessWidget {
   const TopServices(
       {required this.items,
-      this.bgColor = Colors.blue,
-      this.fgColor = Colors.black,
+      this.bgColor = lightBlue,
+      this.fgColor = darkGrey,
       super.key});
 
   final List<TopServicesItem> items;
@@ -208,14 +175,21 @@ class TopServices extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                myTileButton(bgColor, fgColor, items[0].icon, items[0].label,
+                myTileButton(bgColor, fgColor, items[0].image, items[0].label,
                     onTap: items[0].onTap),
                 const Spacer(),
-                myTileButton(bgColor, fgColor, items[1].icon, items[1].label,
+                myTileButton(bgColor, fgColor, items[1].image, items[1].label,
                     onTap: items[1].onTap),
                 const Spacer(),
-                myTileButton(bgColor, fgColor, items[2].icon, items[2].label,
-                    onTap: items[1].onTap),
+                myTileButton(bgColor, fgColor, items[2].image, items[2].label,
+                    onTap: items[2].onTap),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                myTileButton(bgColor, fgColor, items[3].image, items[3].label,
+                    onTap: items[3].onTap)
               ],
             )
           ],
