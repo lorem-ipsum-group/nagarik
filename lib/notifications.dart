@@ -32,13 +32,12 @@ class Notifications extends StatelessWidget {
         ),
         body: Container(
             padding: const EdgeInsets.all(10),
-            child: Expanded(
-              child: ListView.builder(
-                  itemCount: notifications.length,
-                  itemBuilder: (context, index) {
-                    return notificationTile(notifications[index]);
-                  }),
-            )),
+            child: ListView.builder(
+              itemCount: notifications.length,
+              itemBuilder: (context, index) {
+                return notificationTile(notifications[index]);
+            }),
+          ),
         bottomNavigationBar: MyBottomNavBar(
           currentTabIndex: 2,
           switchTab: switchTab,

@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nagarik/chat_screen.dart';
@@ -7,6 +6,10 @@ import 'package:nagarik/my_buttons.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:nagarik/my_colors.dart';
 import 'package:nagarik/bottom_nav_bar.dart';
+import 'package:nagarik/my_document.dart';
+
+bool userNameFetched = false;
+String userName = "";
 
 class Home extends StatelessWidget {
   Home({required this.switchTab, required this.documents, super.key});
@@ -17,8 +20,12 @@ class Home extends StatelessWidget {
   final db = FirebaseFirestore.instance;
 
   Future<String> fetchUserName() async {
-    DocumentSnapshot user = await db.collection('users').doc("123").get();
-    return user.get('name');
+    if (!userNameFetched) {
+      DocumentSnapshot user = await db.collection('users').doc("123").get();
+      userName = user.get('name');
+      userNameFetched = true;
+    }
+    return Future(() => userName);
   }
 
   @override
@@ -26,142 +33,148 @@ class Home extends StatelessWidget {
     return FutureBuilder(
         future: fetchUserName(),
         builder: (context, AsyncSnapshot<String> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else {
-            return Scaffold(
-                key: scaffoldKey,
-                appBar: AppBar(
-                  backgroundColor: pastel,
-                  title: Text('Hi, ${snapshot.data}'),
-                  toolbarHeight: 50,
-                  leadingWidth: 100,
-                  leading: Container(
-                    decoration: const BoxDecoration(shape: BoxShape.circle),
-                    clipBehavior: Clip.hardEdge,
-                    child: const Image(
-                        image: NetworkImage("https://plchldr.co/i/500x250")),
-                  ),
-                  actions: [
-                    IconButton(
-                        onPressed: () {
-                          scaffoldKey.currentState?.openEndDrawer();
-                        },
-                        icon: const Icon(Icons.more_vert))
+          // if (snapshot.connectionState == ConnectionState.waiting) {
+          //   return const Center(
+          //     child: CircularProgressIndicator(),
+          //   );
+          // } else if (snapshot.hasError) {
+          //   return Center(
+          //     child: Text('Error: ${snapshot.error}'),
+          //   );
+          // } else {
+          return Scaffold(
+              key: scaffoldKey,
+              appBar: AppBar(
+                backgroundColor: pastel,
+                title: Text('Hi, ${snapshot.data}'),
+                toolbarHeight: 50,
+                leadingWidth: 100,
+                leading: Container(
+                  decoration: const BoxDecoration(shape: BoxShape.circle),
+                  clipBehavior: Clip.hardEdge,
+                  child: const Image(
+                      image: NetworkImage("https://plchldr.co/i/500x250")),
+                ),
+                actions: [
+                  IconButton(
+                      onPressed: () {
+                        scaffoldKey.currentState?.openEndDrawer();
+                      },
+                      icon: const Icon(Icons.more_vert))
+                ],
+              ),
+              endDrawer: Drawer(
+                elevation: 5,
+                backgroundColor: white,
+                width: 220,
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    DrawerHeader(
+                      decoration: const BoxDecoration(
+                        color: lightBlue,
+                      ),
+                      child: Center(
+                        child: Image.asset('assets/logo.png',
+                            width: 100, height: 100),
+                      ),
+                    ),
+                    ListTile(
+                      title: const Center(
+                          child: Text('Live Chat',
+                              style: TextStyle(
+                                  color: lightGrey,
+                                  fontWeight: FontWeight.w400))),
+                      onTap: () {
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (_) => ChatScreen()));
+                      },
+                    ),
+                    ListTile(
+                      title: const Center(
+                          child: Text(
+                        'Logout',
+                        style: TextStyle(
+                            color: lightGrey, fontWeight: FontWeight.w400),
+                      )),
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => AuthenticationPage()),
+                        );
+                      },
+                    ),
                   ],
                 ),
-                endDrawer: Drawer(
-                  elevation: 5,
-                  backgroundColor: white,
-                  width: 220,
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      DrawerHeader(
-                        decoration: const BoxDecoration(
-                          color: lightBlue,
-                        ),
-                        child: Center(
-                          child: Image.asset('assets/logo.png',
-                              width: 100, height: 100),
-                        ),
-                      ),
-                      ListTile(
-                        title: const Center(
-                            child: Text('Live Chat',
-                                style: TextStyle(
-                                    color: lightGrey,
-                                    fontWeight: FontWeight.w400))),
-                        onTap: () {
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (_) => ChatScreen()));
-                        },
-                      ),
-                      ListTile(
-                        title: const Center(
-                            child: Text(
-                          'Logout',
-                          style: TextStyle(
-                              color: lightGrey, fontWeight: FontWeight.w400),
-                        )),
-                        onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => AuthenticationPage()),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                body: SingleChildScrollView(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                      TopServices(items: [
-                        TopServicesItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
-                            onTap: null),
-                        TopServicesItem(
-                            icon: Icons.credit_card, label: "PAN", onTap: null),
-                        TopServicesItem(
-                            icon: Icons.credit_card,
-                            label: "Passport",
-                            onTap: null),
-                      ], bgColor: lightBlue, fgColor: blue),
-                      IssuedDocuments(documents: documents),
-                      const AllServices(services: [
-                        ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
-                            onTap: null),
-                        ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
-                            onTap: null),
-                        ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
-                            onTap: null),
-                        ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
-                            onTap: null),
-                        ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
-                            onTap: null),
-                        ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
-                            onTap: null),
-                        ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
-                            onTap: null),
-                      ])
-                    ])),
-                bottomNavigationBar: MyBottomNavBar(
-                  currentTabIndex: 0,
-                  switchTab: switchTab,
-                ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerDocked,
-                floatingActionButton: const FloatingActionButton(
-                  onPressed: null,
-                  shape: CircleBorder(),
-                  backgroundColor: blue,
-                  child: Icon(Icons.qr_code, color: white),
-                ));
-          }
+              ),
+              body: SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                    TopServices(items: [
+                      TopServicesItem(
+                          icon: Icons.credit_card,
+                          label: "Citizenship",
+                          onTap: () => Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (_) => Document(type: DocumentType.Citizenship,)))),
+                      TopServicesItem(
+                          icon: Icons.credit_card, label: "PAN", onTap: () => Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (_) => Document(type: DocumentType.Citizenship,)))),
+                      TopServicesItem(
+                          icon: Icons.credit_card,
+                          label: "Passport",
+                          onTap: () => Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (_) => Document(type: DocumentType.Citizenship,)))),
+                    ], bgColor: lightBlue, fgColor: blue),
+                    IssuedDocuments(
+                      documents: documents,
+                      switchTab: switchTab,
+                    ),
+                    AllServices(services: [
+                      ServicesListItem(
+                          icon: Icons.credit_card,
+                          label: "Citizenship",
+                          onTap: () => Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (_) => Document(type: DocumentType.Citizenship,)))),
+                      const ServicesListItem(
+                          icon: Icons.credit_card,
+                          label: "PAN",
+                          onTap: null),
+                      const ServicesListItem(
+                          icon: Icons.credit_card,
+                          label: "Passport",
+                          onTap: null),
+                      const ServicesListItem(
+                          icon: Icons.credit_card,
+                          label: "NID",
+                          onTap: null),
+                      const ServicesListItem(
+                          icon: Icons.credit_card,
+                          label: "Education",
+                          onTap: null),
+                      const ServicesListItem(
+                          icon: Icons.credit_card,
+                          label: "NOC",
+                          onTap: null),
+                      const ServicesListItem(
+                          icon: Icons.credit_card,
+                          label: "Complaints",
+                          onTap: null),
+                    ])
+                  ])),
+              bottomNavigationBar: MyBottomNavBar(
+                currentTabIndex: 0,
+                switchTab: switchTab,
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+              floatingActionButton: const FloatingActionButton(
+                onPressed: null,
+                shape: CircleBorder(),
+                backgroundColor: blue,
+                child: Icon(Icons.qr_code, color: white),
+              ));
         });
   }
 }
@@ -211,9 +224,11 @@ class TopServices extends StatelessWidget {
 }
 
 class IssuedDocuments extends StatefulWidget {
-  const IssuedDocuments({required this.documents, super.key});
+  const IssuedDocuments(
+      {required this.documents, required this.switchTab, super.key});
 
   final List<IssuedDocumentItem> documents;
+  final void Function(int index) switchTab;
 
   @override
   State<IssuedDocuments> createState() => IssuedDocumentsState();
@@ -232,23 +247,19 @@ class IssuedDocumentsState extends State<IssuedDocuments> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Issued Documents",
-                      style: TextStyle(
-                          fontSize: 25,
-                          color: red,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    IconButton(
-                        onPressed: null,
-                        icon: Icon(
-                          Icons.arrow_circle_right_outlined,
-                          color: red,
-                        ))
-                  ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                const Text(
+                  "Issued Documents",
+                  style: TextStyle(
+                      fontSize: 25, color: red, fontWeight: FontWeight.w600),
+                ),
+                IconButton(
+                    onPressed: () => widget.switchTab(1),
+                    icon: const Icon(
+                      Icons.arrow_circle_right_outlined,
+                      color: red,
+                    ))
+              ]),
               const SizedBox(height: 20),
               Align(
                   alignment: Alignment.centerLeft,
