@@ -42,7 +42,7 @@ class Documents extends StatefulWidget {
 
 class DocumentsState extends State<Documents> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,10 +53,10 @@ class DocumentsState extends State<Documents> {
           toolbarHeight: 50,
           actions: [
             IconButton(
-              onPressed: () {
-                scaffoldKey.currentState?.openEndDrawer();
-              },
-              icon: const Icon(Icons.more_vert))
+                onPressed: () {
+                  scaffoldKey.currentState?.openEndDrawer();
+                },
+                icon: const Icon(Icons.more_vert))
           ],
         ),
         body: Column(
@@ -118,7 +118,7 @@ class DocumentsState extends State<Documents> {
               ],
             ),
             Expanded(
-              child: ListView.builder(
+                child: ListView.builder(
               padding: const EdgeInsets.all(10),
               itemCount:
                   widget.documentListType == DocumentListType.issuedDocuments
@@ -126,18 +126,18 @@ class DocumentsState extends State<Documents> {
                       : widget.uploadedDocuments.length,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 15),
-                  child: documentTile(
-                    widget.documentListType == DocumentListType.issuedDocuments
-                        ? widget.issuedDocuments[index]
-                        : widget.uploadedDocuments[index]));
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: documentTile(
+                        context,
+                        widget.documentListType ==
+                                DocumentListType.issuedDocuments
+                            ? widget.issuedDocuments[index]
+                            : widget.uploadedDocuments[index]));
               },
             ))
           ],
         ),
-
         endDrawer: myDrawer(context),
-        
         bottomNavigationBar: MyBottomNavBar(
           currentTabIndex: 1,
           switchTab: widget.switchTab,
@@ -152,12 +152,11 @@ class DocumentsState extends State<Documents> {
   }
 }
 
-ElevatedButton documentTile(DocumentTileItem item) {
+ElevatedButton documentTile(BuildContext context, DocumentTileItem item) {
   const bgColor = pastel;
   final placeholderImage = item.image ??
       const Image(
-          image: NetworkImage(
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Emblem_of_Nepal.svg/1200px-Emblem_of_Nepal.svg.png"));
+          image: AssetImage('assets/emblem.png'));
 
   return ElevatedButton(
       onPressed: item.onTap,
@@ -186,7 +185,7 @@ ElevatedButton documentTile(DocumentTileItem item) {
               children: [
                 SizedBox(height: 60, width: 60, child: placeholderImage),
                 Expanded(
-                  child: Column(
+                    child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,

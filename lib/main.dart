@@ -14,7 +14,7 @@ import 'package:nagarik/profile.dart';
 import 'package:nagarik/my_colors.dart';
 import 'package:flutter/services.dart';
 import 'package:nagarik/my_document.dart';
-import 'package:nagarik/registration.dart~';
+import 'package:nagarik/registration.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

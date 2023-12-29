@@ -61,8 +61,7 @@ class Document extends StatelessWidget {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
-                                  child: Image.network(
-                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Emblem_of_Nepal.svg/1200px-Emblem_of_Nepal.svg.png",
+                                  child: Image.asset('assets/emblem.png',
                                     width: 50,
                                     height: 50,
                                     fit: BoxFit.cover,

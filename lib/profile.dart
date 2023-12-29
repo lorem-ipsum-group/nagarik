@@ -87,8 +87,7 @@ class Profile extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: const Image(
-                                image: NetworkImage(
-                                    "https://plchldr.co/i/250x250")),
+                                image: AssetImage('assets/placeholder.png')),
                           )),
                       Positioned(
                           bottom: 0,

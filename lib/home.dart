@@ -52,7 +52,7 @@ class Home extends StatelessWidget {
                   decoration: const BoxDecoration(shape: BoxShape.circle),
                   clipBehavior: Clip.hardEdge,
                   child: const Image(
-                      image: NetworkImage("https://plchldr.co/i/500x250")),
+                      image: AssetImage('assets/placeholder.png')),
                 ),
                 actions: [
                   IconButton(

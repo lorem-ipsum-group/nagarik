@@ -64,8 +64,7 @@ ElevatedButton myPanelButton(IssuedDocumentItem item) {
   const bgColor = pastel;
   final placeholderImage = item.image ??
       const Image(
-          image: NetworkImage(
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Emblem_of_Nepal.svg/1200px-Emblem_of_Nepal.svg.png"));
+          image: AssetImage('assets/emblem.png'));
 
   return ElevatedButton(
       onPressed: item.onTap,

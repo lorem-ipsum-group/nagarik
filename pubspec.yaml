@@ -50,6 +50,7 @@ dependencies:
   rest_api: ^0.0.0
   flutter_chat_bubble: ^2.0.2
   localstorage: ^4.0.1+4
+  flutter_launcher_icons: ^0.13.1
 
 
 dev_dependencies:
@@ -71,6 +72,7 @@ flutter:
 
   assets:
     - assets/emblem.png
+    - assets/placeholder.png
     - assets/logo.png
     - assets/onboarding-1.png
     - assets/onboarding-2.png
@@ -78,6 +80,8 @@ flutter:
     - assets/PAN logo.png
     - assets/Passport Card.png
     - assets/NID.png
+
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
