@@ -107,46 +107,61 @@ class Home extends StatelessWidget {
                         children: [
                       TopServices(items: [
                         TopServicesItem(
-                            icon: Icons.credit_card,
+                            image: AssetImage('assets/Citizenship.png'),
                             label: "Citizenship",
                             onTap: null),
                         TopServicesItem(
-                            icon: Icons.credit_card, label: "PAN", onTap: null),
+                            image: AssetImage('assets/PAN logo.png'), 
+                            label: "PAN", 
+                            onTap: null),
                         TopServicesItem(
-                            icon: Icons.credit_card,
+                            image: AssetImage('assets/Passport Card.png'), 
                             label: "Passport",
+                            onTap: null),
+                        TopServicesItem(
+                            image: AssetImage('assets/NID.png'), 
+                            label: "NID",
                             onTap: null),
                       ], bgColor: lightBlue, fgColor: blue),
                       IssuedDocuments(documents: documents),
                       const AllServices(services: [
                         ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
+                            icon: Icons.local_police,
+                            label: "Police Clearance Report",
                             onTap: null),
                         ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
+                            icon: Icons.how_to_vote,
+                            label: "Voter Card",
                             onTap: null),
                         ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
+                            icon: Icons.vaccines,
+                            label: "Covid Vaccination",
                             onTap: null),
                         ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
+                            icon: Icons.vertical_split_sharp,
+                            label: "Press ID Card",
                             onTap: null),
                         ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
+                            icon: Icons.security,
+                            label: "Social Security Fund",
                             onTap: null),
                         ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
+                            icon: Icons.feedback,
+                            label: "My Complains",
                             onTap: null),
                         ServicesListItem(
-                            icon: Icons.credit_card,
-                            label: "Citizenship",
+                            icon: Icons.home_work,
+                            label: "Malpot",
+                            onTap: null),                        
+                        ServicesListItem(
+                            icon: Icons.health_and_safety,
+                            label: "Health Insurance",
+                            onTap: null),                        
+                        ServicesListItem(
+                            icon: Icons.emoji_people,
+                            label: "Employee Provident Fund",
                             onTap: null),
+                        
                       ])
                     ])),
                 bottomNavigationBar: MyBottomNavBar(
@@ -169,8 +184,8 @@ class Home extends StatelessWidget {
 class TopServices extends StatelessWidget {
   const TopServices(
       {required this.items,
-      this.bgColor = Colors.blue,
-      this.fgColor = Colors.black,
+      this.bgColor = lightBlue,
+      this.fgColor = darkGrey,
       super.key});
 
   final List<TopServicesItem> items;
@@ -195,14 +210,21 @@ class TopServices extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                myTileButton(bgColor, fgColor, items[0].icon, items[0].label,
+                myTileButton(bgColor, fgColor, items[0].image, items[0].label,
                     onTap: items[0].onTap),
                 const Spacer(),
-                myTileButton(bgColor, fgColor, items[1].icon, items[1].label,
+                myTileButton(bgColor, fgColor, items[1].image, items[1].label,
                     onTap: items[1].onTap),
                 const Spacer(),
-                myTileButton(bgColor, fgColor, items[2].icon, items[2].label,
-                    onTap: items[1].onTap),
+                myTileButton(bgColor, fgColor, items[2].image, items[2].label,
+                    onTap: items[2].onTap),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                myTileButton(bgColor, fgColor, items[3].image, items[3].label,
+                    onTap: items[3].onTap)
               ],
             )
           ],
