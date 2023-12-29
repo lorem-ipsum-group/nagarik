@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nagarik/chat_screen.dart';
 import 'package:nagarik/main.dart';
@@ -7,128 +9,160 @@ import 'package:nagarik/my_colors.dart';
 import 'package:nagarik/bottom_nav_bar.dart';
 
 class Home extends StatelessWidget {
-  Home({required this.switchTab, super.key});
+  Home({required this.switchTab, required this.documents, super.key});
 
   final void Function(int index) switchTab;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final documents;
+  final db = FirebaseFirestore.instance;
+
+  Future<String> fetchUserName() async {
+    DocumentSnapshot user = await db.collection('users').doc("123").get();
+    return user.get('name');
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        key: scaffoldKey,
-        appBar: AppBar(
-          backgroundColor: pastel,
-          title: const Text("Hi, John"),
-          toolbarHeight: 50,
-          leadingWidth: 100,
-          leading: Container(
-            decoration: const BoxDecoration(shape: BoxShape.circle),
-            clipBehavior: Clip.hardEdge,
-            child: const Image(
-                image: NetworkImage("https://plchldr.co/i/500x250")),
-          ),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  scaffoldKey.currentState?.openEndDrawer();
-                },
-                icon: const Icon(Icons.more_vert))
-          ],
-        ),
-        endDrawer: Drawer(
-          elevation: 5,
-          backgroundColor: white,
-          width: 220,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                decoration: const BoxDecoration(
-                  color: lightBlue,
+    return FutureBuilder(
+        future: fetchUserName(),
+        builder: (context, AsyncSnapshot<String> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            return Scaffold(
+                key: scaffoldKey,
+                appBar: AppBar(
+                  backgroundColor: pastel,
+                  title: Text('Hi, ${snapshot.data}'),
+                  toolbarHeight: 50,
+                  leadingWidth: 100,
+                  leading: Container(
+                    decoration: const BoxDecoration(shape: BoxShape.circle),
+                    clipBehavior: Clip.hardEdge,
+                    child: const Image(
+                        image: NetworkImage("https://plchldr.co/i/500x250")),
+                  ),
+                  actions: [
+                    IconButton(
+                        onPressed: () {
+                          scaffoldKey.currentState?.openEndDrawer();
+                        },
+                        icon: const Icon(Icons.more_vert))
+                  ],
                 ),
-                child: Center(
-                  child:
-                      Image.asset('assets/logo.png', width: 100, height: 100),
+                endDrawer: Drawer(
+                  elevation: 5,
+                  backgroundColor: white,
+                  width: 220,
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      DrawerHeader(
+                        decoration: const BoxDecoration(
+                          color: lightBlue,
+                        ),
+                        child: Center(
+                          child: Image.asset('assets/logo.png',
+                              width: 100, height: 100),
+                        ),
+                      ),
+                      ListTile(
+                        title: const Center(
+                            child: Text('Live Chat',
+                                style: TextStyle(
+                                    color: lightGrey,
+                                    fontWeight: FontWeight.w400))),
+                        onTap: () {
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (_) => ChatScreen()));
+                        },
+                      ),
+                      ListTile(
+                        title: const Center(
+                            child: Text(
+                          'Logout',
+                          style: TextStyle(
+                              color: lightGrey, fontWeight: FontWeight.w400),
+                        )),
+                        onTap: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => AuthenticationPage()),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              ListTile(
-                title: const Center(
-                    child: Text('Live Chat',
-                        style: TextStyle(
-                            color: lightGrey, fontWeight: FontWeight.w400))),
-                onTap: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ChatScreen()) );
-                },
-              ),
-              ListTile(
-                title: const Center(
-                    child: Text(
-                  'Logout',
-                  style:
-                      TextStyle(color: lightGrey, fontWeight: FontWeight.w400),
-                )),
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => AuthenticationPage()),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-        body: SingleChildScrollView(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-          TopServices(items: [
-            TopServicesItem(
-                icon: Icons.credit_card, label: "Citizenship", onTap: null),
-            TopServicesItem(icon: Icons.credit_card, label: "PAN", onTap: null),
-            TopServicesItem(
-                icon: Icons.credit_card, label: "Passport", onTap: null),
-          ], bgColor: lightBlue, fgColor: blue),
-          IssuedDocuments(documents: [
-            IssuedDocumentItem(
-                title: "Citizenship",
-                id: "77-01-75-01554",
-                subtitle: "Ministry of Home Affairs"),
-            IssuedDocumentItem(
-                title: "Citizenship",
-                id: "77-01-75-01554",
-                subtitle: "Ministry of Home Affairs"),
-            IssuedDocumentItem(
-                title: "Citizenship",
-                id: "77-01-75-01554",
-                subtitle: "Ministry of Home Affairs"),
-          ]),
-          const AllServices(services: [
-            ServicesListItem(
-                icon: Icons.credit_card, label: "Citizenship", onTap: null),
-            ServicesListItem(
-                icon: Icons.credit_card, label: "Citizenship", onTap: null),
-            ServicesListItem(
-                icon: Icons.credit_card, label: "Citizenship", onTap: null),
-            ServicesListItem(
-                icon: Icons.credit_card, label: "Citizenship", onTap: null),
-            ServicesListItem(
-                icon: Icons.credit_card, label: "Citizenship", onTap: null),
-            ServicesListItem(
-                icon: Icons.credit_card, label: "Citizenship", onTap: null),
-            ServicesListItem(
-                icon: Icons.credit_card, label: "Citizenship", onTap: null),
-          ])
-        ])),
-        bottomNavigationBar: MyBottomNavBar(
-          currentTabIndex: 0,
-          switchTab: switchTab,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: const FloatingActionButton(
-          onPressed: null,
-          shape: CircleBorder(),
-          backgroundColor: blue,
-          child: Icon(Icons.qr_code, color: white),
-        ));
+                body: SingleChildScrollView(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                      TopServices(items: [
+                        TopServicesItem(
+                            icon: Icons.credit_card,
+                            label: "Citizenship",
+                            onTap: null),
+                        TopServicesItem(
+                            icon: Icons.credit_card, label: "PAN", onTap: null),
+                        TopServicesItem(
+                            icon: Icons.credit_card,
+                            label: "Passport",
+                            onTap: null),
+                      ], bgColor: lightBlue, fgColor: blue),
+                      IssuedDocuments(documents: documents),
+                      const AllServices(services: [
+                        ServicesListItem(
+                            icon: Icons.credit_card,
+                            label: "Citizenship",
+                            onTap: null),
+                        ServicesListItem(
+                            icon: Icons.credit_card,
+                            label: "Citizenship",
+                            onTap: null),
+                        ServicesListItem(
+                            icon: Icons.credit_card,
+                            label: "Citizenship",
+                            onTap: null),
+                        ServicesListItem(
+                            icon: Icons.credit_card,
+                            label: "Citizenship",
+                            onTap: null),
+                        ServicesListItem(
+                            icon: Icons.credit_card,
+                            label: "Citizenship",
+                            onTap: null),
+                        ServicesListItem(
+                            icon: Icons.credit_card,
+                            label: "Citizenship",
+                            onTap: null),
+                        ServicesListItem(
+                            icon: Icons.credit_card,
+                            label: "Citizenship",
+                            onTap: null),
+                      ])
+                    ])),
+                bottomNavigationBar: MyBottomNavBar(
+                  currentTabIndex: 0,
+                  switchTab: switchTab,
+                ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerDocked,
+                floatingActionButton: const FloatingActionButton(
+                  onPressed: null,
+                  shape: CircleBorder(),
+                  backgroundColor: blue,
+                  child: Icon(Icons.qr_code, color: white),
+                ));
+          }
+        });
   }
 }
 

@@ -1,24 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nagarik/firebase_options.dart';
 import 'package:nagarik/local_auth_interface.dart';
 import 'package:nagarik/home.dart';
 import 'package:nagarik/documents.dart';
+import 'package:nagarik/my_buttons.dart';
 import 'package:nagarik/notifications.dart';
 import 'package:nagarik/onboarding_screen.dart';
 import 'package:nagarik/profile.dart';
 import 'package:nagarik/my_colors.dart';
+import 'package:flutter/services.dart';
+import 'package:nagarik/my_document.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseFirestore.instance.settings = const Settings(persistenceEnabled: true);
   runApp(const MyApp());
 }
-
-var issuedDocuments = [
-  DocumentTileItem(
-      title: "Citizenship",
-      id: "xxxxxxxxxx",
-      unlink: null,
-      subtitle: "Ministry of Home Affairs")
-];
 
 var notifications = [
   NotificationTileItem(
@@ -27,6 +28,8 @@ var notifications = [
       message:
           "This is an alert! Hello there general Kenobi. Trying to make this multiline")
 ];
+
+var uid = "123";
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -52,6 +55,8 @@ class Root extends StatefulWidget {
 
 class _RootState extends State<Root> {
   int _currentTabIndex = 0;
+  final GlobalKey<ScaffoldMessengerState> snackbarKey =
+    GlobalKey<ScaffoldMessengerState>();
 
   void switchTab(int index) {
     setState(() {
@@ -59,14 +64,55 @@ class _RootState extends State<Root> {
     });
   }
 
+  final db = FirebaseFirestore.instance;
+
   late List<Widget> tabs;
 
-  @override
-  void initState() {
-    super.initState();
+  Future<void> unlinkDocument(String documentId, String keyToRemove) async {
+    await db.collection('users').doc(documentId).update({
+      'documents.$keyToRemove': FieldValue.delete(),
+    });
+  }
 
-    tabs = <Widget>[
-      Home(switchTab: switchTab),
+  Future<List<Widget>> initializeData() async {
+    List<DocumentTileItem> issuedDocuments = [];
+    List<IssuedDocumentItem> documentsTileList = [];
+
+    DocumentSnapshot user = await db.collection('users').doc("123").get();
+    final documents = user.get("documents") as Map<String, dynamic>;
+
+    documents.forEach((key, value) {
+        issuedDocuments.add(
+          DocumentTileItem(
+            title: key.isEmpty ? key : key[0].toUpperCase() + key.substring(1),
+            id: value,
+            unlink: () {
+              unlinkDocument("123", key);
+            },
+            subtitle: "Ministry of Home Affairs",
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) => Document(type: DocumentType.Citizenship)));
+            }
+          ),
+        );
+
+        documentsTileList.add(IssuedDocumentItem(
+            title: key.isEmpty ? key : key[0].toUpperCase() + key.substring(1),
+            id: value,
+            subtitle: "Ministry of Home Affairs",
+            onTap: () {
+              Clipboard.setData(ClipboardData(text: value));
+              SnackBar snackBar = SnackBar(content: Text("Copied $key ID to clipboard"));
+              snackbarKey.currentState?.showSnackBar(snackBar); 
+            }
+          )
+        );
+      }    
+    );
+    
+
+    return [
+      Home(switchTab: switchTab, documents: documentsTileList),
       Documents(switchTab: switchTab, issuedDocuments: issuedDocuments),
       Notifications(switchTab: switchTab, notifications: notifications),
       Profile(
@@ -77,15 +123,30 @@ class _RootState extends State<Root> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: "nagarik app",
-        theme: ThemeData(
-            textTheme:
-                GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme)),
-        debugShowCheckedModeBanner: false,
-        home: tabs[_currentTabIndex]);
+    return FutureBuilder<List<Widget>>(
+      future: initializeData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error initializing data ${snapshot.error}'));
+        } else {
+          tabs = snapshot.data!;
+          return MaterialApp(
+            title: "nagarik app",
+            scaffoldMessengerKey: snackbarKey,
+            theme: ThemeData(
+              textTheme: GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme),
+            ),
+            debugShowCheckedModeBanner: false,
+            home: tabs.isNotEmpty ? tabs[_currentTabIndex] : const SizedBox(),
+          );
+        }
+      },
+    );
   }
 }
+
 
 class AuthenticationPage extends StatelessWidget {
   const AuthenticationPage({super.key});
