@@ -4,6 +4,7 @@ import 'package:nagarik/local_auth_interface.dart';
 import 'package:nagarik/home.dart';
 import 'package:nagarik/documents.dart';
 import 'package:nagarik/notifications.dart';
+import 'package:nagarik/onboarding_screen.dart';
 import 'package:nagarik/profile.dart';
 import 'package:nagarik/my_colors.dart';
 
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
             textTheme:
                 GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme)),
         debugShowCheckedModeBanner: false,
-        home: const AuthenticationPage());
+        home: const OnboardingScreen());
   }
 }
 
@@ -92,35 +93,20 @@ class AuthenticationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: lightBlue,
-          title: const Text("Authenticate"),
-        ),
         backgroundColor: white,
         body: Center(
           child: Column(children: [
-            Container(
-              height: 150,
-              width: 450,
-              decoration: const BoxDecoration(
+            const SizedBox(height: 100),
+            const Text('Set FingerPrint',
+                style: TextStyle(
                   color: red,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30))),
-              child: const Padding(
-                padding: EdgeInsets.all(40.0),
-                child: Text(
-                  'Login',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: white, fontSize: 48),
-                ),
-              ),
-            ),
-            const SizedBox(height: 40),
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                )),
+            SizedBox(height:40),
             const Text('You can login directly with fingerprint.',
                 style: TextStyle(
-                  color: Color.fromARGB(255, 67, 66, 66),
+                  color: darkGrey,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 )),
@@ -172,6 +158,33 @@ class AuthenticationPage extends StatelessWidget {
                   style: TextStyle(color: white, fontSize: 24),
                 ),
               ),
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: Text(
+                'OR',
+                style: TextStyle(color: darkGrey),
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => const Root()));
+              },
+              child: const Center(
+                child: Text(
+                  "Skip",
+                  style: TextStyle(color: white, fontSize: 24),
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: red,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  fixedSize: const Size.fromWidth(300),
+                  shadowColor: Colors.black),
             )
           ]),
         ));
