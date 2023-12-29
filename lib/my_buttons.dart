@@ -22,7 +22,7 @@ ElevatedButton myTileButton(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
       fixedSize: MaterialStateProperty.all(const Size(100, 100)),
       padding: MaterialStateProperty.all(
-          const EdgeInsets.symmetric(vertical: 20, horizontal: 10)),
+          const EdgeInsets.symmetric(vertical: 18, horizontal: 10)),
       shadowColor: MaterialStateProperty.all(Colors.black),
       elevation: MaterialStateProperty.all(5),
     ),

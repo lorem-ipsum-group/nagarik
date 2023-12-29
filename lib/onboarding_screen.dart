@@ -46,6 +46,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 ElevatedButton(
                   onPressed: () {
+                    Navigator.pop(context);
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) {
@@ -62,17 +63,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
                 SmoothPageIndicator(
-                  controller: _controller,
-                  count: 2,
-                  effect: const JumpingDotEffect(
-                    activeDotColor: red,
-                    dotColor: fadedRed
-                  )
-
-                ),
+                    controller: _controller,
+                    count: 2,
+                    effect: const JumpingDotEffect(
+                        activeDotColor: red, dotColor: fadedRed)),
                 onLastPage
                     ? ElevatedButton(
                         onPressed: () {
+                          Navigator.pop(context);
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) {

@@ -32,6 +32,10 @@ var notifications = [
 
 var uid = "123";
 
+List<DocumentTileItem> issuedDocuments = [];
+List<IssuedDocumentItem> documentsTileList = [];
+bool fetchedDocuments = false;
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -76,46 +80,47 @@ class _RootState extends State<Root> {
   }
 
   Future<List<Widget>> initializeData() async {
-    List<DocumentTileItem> issuedDocuments = [];
-    List<IssuedDocumentItem> documentsTileList = [];
+    if (!fetchedDocuments) {
+      issuedDocuments.clear();
+      documentsTileList.clear();
 
-    DocumentSnapshot user = await db.collection('users').doc("123").get();
-    final documents = user.get("documents") as Map<String, dynamic>;
+      DocumentSnapshot user = await db.collection('users').doc("123").get();
+      final documents = user.get("documents") as Map<String, dynamic>;
 
-    documents.forEach((key, value) {
-      issuedDocuments.add(
-        DocumentTileItem(
+      documents.forEach((key, value) {
+        issuedDocuments.add(
+          DocumentTileItem(
+              title:
+                  key.isEmpty ? key : key[0].toUpperCase() + key.substring(1),
+              id: value,
+              unlink: () {
+                unlinkDocument("123", key);
+              },
+              subtitle: "Ministry of Home Affairs",
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => Document(type: DocumentType.Citizenship)));
+              }),
+        );
+
+        documentsTileList.add(IssuedDocumentItem(
             title: key.isEmpty ? key : key[0].toUpperCase() + key.substring(1),
             id: value,
-            unlink: () {
-              unlinkDocument("123", key);
-            },
             subtitle: "Ministry of Home Affairs",
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => Document(type: DocumentType.Citizenship)));
-            }),
-      );
-
-      documentsTileList.add(IssuedDocumentItem(
-          title: key.isEmpty ? key : key[0].toUpperCase() + key.substring(1),
-          id: value,
-          subtitle: "Ministry of Home Affairs",
-          onTap: () {
-            Clipboard.setData(ClipboardData(text: value));
-            SnackBar snackBar =
-                SnackBar(content: Text("Copied $key ID to clipboard"));
-            snackbarKey.currentState?.showSnackBar(snackBar);
-          }));
-    });
+              Clipboard.setData(ClipboardData(text: value));
+              SnackBar snackBar =
+                  SnackBar(content: Text("Copied $key ID to clipboard"));
+              snackbarKey.currentState?.showSnackBar(snackBar);
+            }));
+      });
+    }
 
     return [
       Home(switchTab: switchTab, documents: documentsTileList),
       Documents(switchTab: switchTab, issuedDocuments: issuedDocuments),
       Notifications(switchTab: switchTab, notifications: notifications),
-      Profile(
-        switchTab: switchTab,
-      ),
+      Profile(switchTab: switchTab),
     ];
   }
 
@@ -124,12 +129,12 @@ class _RootState extends State<Root> {
     return FutureBuilder<List<Widget>>(
       future: initializeData(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(
-              child: Text('Error initializing data ${snapshot.error}'));
-        } else {
+        // if (snapshot.connectionState == ConnectionState.waiting) {
+        //   return const Center(child: CircularProgressIndicator());
+        // } else if (snapshot.hasError) {
+        //   return Center(
+        //       child: Text('Error initializing data ${snapshot.error}'));
+        // } else {
           tabs = snapshot.data!;
           return MaterialApp(
             title: "nagarik app",
@@ -142,7 +147,6 @@ class _RootState extends State<Root> {
             home: tabs.isNotEmpty ? tabs[_currentTabIndex] : const SizedBox(),
           );
         }
-      },
     );
   }
 }

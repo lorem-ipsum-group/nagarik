@@ -1,12 +1,14 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:nagarik/chat_screen.dart';
-import 'package:nagarik/main.dart';
 import 'package:nagarik/my_buttons.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:nagarik/my_colors.dart';
 import 'package:nagarik/bottom_nav_bar.dart';
+import 'package:nagarik/my_document.dart';
+import 'package:nagarik/my_drawer.dart';
+
+bool userNameFetched = false;
+String userName = "";
 
 class Home extends StatelessWidget {
   Home({required this.switchTab, required this.documents, super.key});
@@ -17,8 +19,12 @@ class Home extends StatelessWidget {
   final db = FirebaseFirestore.instance;
 
   Future<String> fetchUserName() async {
-    DocumentSnapshot user = await db.collection('users').doc("123").get();
-    return user.get('name');
+    if (!userNameFetched) {
+      DocumentSnapshot user = await db.collection('users').doc("123").get();
+      userName = user.get('name');
+      userNameFetched = true;
+    }
+    return Future(() => userName);
   }
 
   @override
@@ -26,157 +32,116 @@ class Home extends StatelessWidget {
     return FutureBuilder(
         future: fetchUserName(),
         builder: (context, AsyncSnapshot<String> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else {
-            return Scaffold(
-                key: scaffoldKey,
-                appBar: AppBar(
-                  backgroundColor: pastel,
-                  title: Text('Hi, ${snapshot.data}'),
-                  toolbarHeight: 50,
-                  leadingWidth: 100,
-                  leading: Container(
-                    decoration: const BoxDecoration(shape: BoxShape.circle),
-                    clipBehavior: Clip.hardEdge,
-                    child: const Image(
-                        image: NetworkImage("https://plchldr.co/i/500x250")),
-                  ),
-                  actions: [
-                    IconButton(
-                        onPressed: () {
-                          scaffoldKey.currentState?.openEndDrawer();
-                        },
-                        icon: const Icon(Icons.more_vert))
-                  ],
+          // if (snapshot.connectionState == ConnectionState.waiting) {
+          //   return const Center(
+          //     child: CircularProgressIndicator(),
+          //   );
+          // } else if (snapshot.hasError) {
+          //   return Center(
+          //     child: Text('Error: ${snapshot.error}'),
+          //   );
+          // } else {
+          return Scaffold(
+              key: scaffoldKey,
+              appBar: AppBar(
+                backgroundColor: pastel,
+                title: Text('Hi, ${snapshot.data}'),
+                toolbarHeight: 50,
+                leadingWidth: 100,
+                leading: Container(
+                  decoration: const BoxDecoration(shape: BoxShape.circle),
+                  clipBehavior: Clip.hardEdge,
+                  child: const Image(
+                      image: NetworkImage("https://plchldr.co/i/500x250")),
                 ),
-                endDrawer: Drawer(
-                  elevation: 5,
-                  backgroundColor: white,
-                  width: 220,
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      DrawerHeader(
-                        decoration: const BoxDecoration(
-                          color: lightBlue,
-                        ),
-                        child: Center(
-                          child: Image.asset('assets/logo.png',
-                              width: 100, height: 100),
-                        ),
-                      ),
-                      ListTile(
-                        title: const Center(
-                            child: Text('Live Chat',
-                                style: TextStyle(
-                                    color: lightGrey,
-                                    fontWeight: FontWeight.w400))),
-                        onTap: () {
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (_) => ChatScreen()));
-                        },
-                      ),
-                      ListTile(
-                        title: const Center(
-                            child: Text(
-                          'Logout',
-                          style: TextStyle(
-                              color: lightGrey, fontWeight: FontWeight.w400),
-                        )),
-                        onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => AuthenticationPage(showSkipButton: false,)),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                body: SingleChildScrollView(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                      TopServices(items: [
-                        TopServicesItem(
-                            image: AssetImage('assets/Citizenship.png'),
-                            label: "Citizenship",
-                            onTap: null),
-                        TopServicesItem(
-                            image: AssetImage('assets/PAN logo.png'), 
-                            label: "PAN", 
-                            onTap: null),
-                        TopServicesItem(
-                            image: AssetImage('assets/Passport Card.png'), 
-                            label: "Passport",
-                            onTap: null),
-                        TopServicesItem(
-                            image: AssetImage('assets/NID.png'), 
-                            label: "NID",
-                            onTap: null),
-                      ], bgColor: lightBlue, fgColor: blue),
-                      IssuedDocuments(documents: documents),
-                      const AllServices(services: [
-                        ServicesListItem(
-                            icon: Icons.local_police,
-                            label: "Police Clearance Report",
-                            onTap: null),
-                        ServicesListItem(
-                            icon: Icons.how_to_vote,
-                            label: "Voter Card",
-                            onTap: null),
-                        ServicesListItem(
-                            icon: Icons.vaccines,
-                            label: "Covid Vaccination",
-                            onTap: null),
-                        ServicesListItem(
-                            icon: Icons.vertical_split_sharp,
-                            label: "Press ID Card",
-                            onTap: null),
-                        ServicesListItem(
-                            icon: Icons.security,
-                            label: "Social Security Fund",
-                            onTap: null),
-                        ServicesListItem(
-                            icon: Icons.feedback,
-                            label: "My Complains",
-                            onTap: null),
-                        ServicesListItem(
-                            icon: Icons.home_work,
-                            label: "Malpot",
-                            onTap: null),                        
-                        ServicesListItem(
-                            icon: Icons.health_and_safety,
-                            label: "Health Insurance",
-                            onTap: null),                        
-                        ServicesListItem(
-                            icon: Icons.emoji_people,
-                            label: "Employee Provident Fund",
-                            onTap: null),
-                        
-                      ])
-                    ])),
-                bottomNavigationBar: MyBottomNavBar(
-                  currentTabIndex: 0,
-                  switchTab: switchTab,
-                ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerDocked,
-                floatingActionButton: const FloatingActionButton(
-                  onPressed: null,
-                  shape: CircleBorder(),
-                  backgroundColor: blue,
-                  child: Icon(Icons.qr_code, color: white),
-                ));
-          }
+                actions: [
+                  IconButton(
+                      onPressed: () {
+                        scaffoldKey.currentState?.openEndDrawer();
+                      },
+                      icon: const Icon(Icons.more_vert))
+                ],
+              ),
+              endDrawer: myDrawer(context),
+              body: SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                    TopServices(items: [
+                      TopServicesItem(
+                          image: AssetImage('assets/Citizenship.png'),
+                          label: "Citizenship",
+                          onTap: () =>
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => Document(
+                                        type: DocumentType.Citizenship,
+                                      )))),
+                      TopServicesItem(
+                          image: AssetImage('assets/PAN logo.png'),
+                          label: "PAN",
+                          onTap: null),
+                      TopServicesItem(
+                          image: AssetImage('assets/Passport Card.png'),
+                          label: "Passport",
+                          onTap: null),
+                      TopServicesItem(
+                          image: AssetImage('assets/NID.png'),
+                          label: "NID",
+                          onTap: null),
+                    ], bgColor: lightBlue, fgColor: blue),
+                    IssuedDocuments(
+                      documents: documents,
+                      switchTab: (_) => switchTab(1),
+                    ),
+                    const AllServices(services: [
+                      ServicesListItem(
+                          icon: Icons.local_police,
+                          label: "Police Clearance Report",
+                          onTap: null),
+                      ServicesListItem(
+                          icon: Icons.how_to_vote,
+                          label: "Voter Card",
+                          onTap: null),
+                      ServicesListItem(
+                          icon: Icons.vaccines,
+                          label: "Covid Vaccination",
+                          onTap: null),
+                      ServicesListItem(
+                          icon: Icons.vertical_split_sharp,
+                          label: "Press ID Card",
+                          onTap: null),
+                      ServicesListItem(
+                          icon: Icons.security,
+                          label: "Social Security Fund",
+                          onTap: null),
+                      ServicesListItem(
+                          icon: Icons.feedback,
+                          label: "My Complains",
+                          onTap: null),
+                      ServicesListItem(
+                          icon: Icons.home_work, label: "Malpot", onTap: null),
+                      ServicesListItem(
+                          icon: Icons.health_and_safety,
+                          label: "Health Insurance",
+                          onTap: null),
+                      ServicesListItem(
+                          icon: Icons.emoji_people,
+                          label: "Employee Provident Fund",
+                          onTap: null),
+                    ])
+                  ])),
+              bottomNavigationBar: MyBottomNavBar(
+                currentTabIndex: 0,
+                switchTab: switchTab,
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+              floatingActionButton: const FloatingActionButton(
+                onPressed: null,
+                shape: CircleBorder(),
+                backgroundColor: blue,
+                child: Icon(Icons.qr_code, color: white),
+              ));
         });
   }
 }
@@ -233,9 +198,11 @@ class TopServices extends StatelessWidget {
 }
 
 class IssuedDocuments extends StatefulWidget {
-  const IssuedDocuments({required this.documents, super.key});
+  const IssuedDocuments(
+      {required this.documents, required this.switchTab, super.key});
 
   final List<IssuedDocumentItem> documents;
+  final void Function(int index) switchTab;
 
   @override
   State<IssuedDocuments> createState() => IssuedDocumentsState();
@@ -254,23 +221,19 @@ class IssuedDocumentsState extends State<IssuedDocuments> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Issued Documents",
-                      style: TextStyle(
-                          fontSize: 25,
-                          color: red,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    IconButton(
-                        onPressed: null,
-                        icon: Icon(
-                          Icons.arrow_circle_right_outlined,
-                          color: red,
-                        ))
-                  ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                const Text(
+                  "Issued Documents",
+                  style: TextStyle(
+                      fontSize: 25, color: red, fontWeight: FontWeight.w600),
+                ),
+                IconButton(
+                    onPressed: () => widget.switchTab(1),
+                    icon: const Icon(
+                      Icons.arrow_circle_right_outlined,
+                      color: red,
+                    ))
+              ]),
               const SizedBox(height: 20),
               Align(
                   alignment: Alignment.centerLeft,
