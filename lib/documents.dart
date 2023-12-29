@@ -110,17 +110,19 @@ class DocumentsState extends State<Documents> {
               ],
             ),
             Expanded(
-                child: ListView.builder(
+              child: ListView.builder(
               padding: const EdgeInsets.all(10),
               itemCount:
                   widget.documentListType == DocumentListType.issuedDocuments
                       ? widget.issuedDocuments.length
                       : widget.uploadedDocuments.length,
               itemBuilder: (context, index) {
-                return documentTile(
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: documentTile(
                     widget.documentListType == DocumentListType.issuedDocuments
                         ? widget.issuedDocuments[index]
-                        : widget.uploadedDocuments[index]);
+                        : widget.uploadedDocuments[index]));
               },
             ))
           ],
@@ -151,16 +153,16 @@ ElevatedButton documentTile(DocumentTileItem item) {
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(bgColor),
         surfaceTintColor: MaterialStateProperty.all(bgColor),
-        fixedSize: MaterialStateProperty.all(const Size(300, 150)),
+        fixedSize: MaterialStateProperty.all(const Size(300, 130)),
         shape: MaterialStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
         padding: MaterialStateProperty.all(
-            const EdgeInsets.symmetric(vertical: 20, horizontal: 10)),
+            const EdgeInsets.symmetric(vertical: 10, horizontal: 10)),
         shadowColor: MaterialStateProperty.all(Colors.black),
         elevation: MaterialStateProperty.all(5),
       ),
       child: SizedBox(
-        height: 150,
+        height: 130,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -171,9 +173,9 @@ ElevatedButton documentTile(DocumentTileItem item) {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 75, width: 75, child: placeholderImage),
+                SizedBox(height: 60, width: 60, child: placeholderImage),
                 Expanded(
-                    child: Column(
+                  child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,

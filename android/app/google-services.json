@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "783405175384",
+    "project_id": "nagarik-revamped",
+    "storage_bucket": "nagarik-revamped.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:783405175384:android:4f678df70b883d3355702d",
+        "android_client_info": {
+          "package_name": "com.example.nagarik"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQQYA-U2oMko0R95xf9TXkwi_J37K-0Bs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
