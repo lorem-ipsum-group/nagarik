@@ -17,7 +17,8 @@ import 'package:nagarik/my_document.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseFirestore.instance.settings = const Settings(persistenceEnabled: true);
+  FirebaseFirestore.instance.settings =
+      const Settings(persistenceEnabled: true);
   runApp(const MyApp());
 }
 
@@ -56,7 +57,7 @@ class Root extends StatefulWidget {
 class _RootState extends State<Root> {
   int _currentTabIndex = 0;
   final GlobalKey<ScaffoldMessengerState> snackbarKey =
-    GlobalKey<ScaffoldMessengerState>();
+      GlobalKey<ScaffoldMessengerState>();
 
   void switchTab(int index) {
     setState(() {
@@ -82,8 +83,8 @@ class _RootState extends State<Root> {
     final documents = user.get("documents") as Map<String, dynamic>;
 
     documents.forEach((key, value) {
-        issuedDocuments.add(
-          DocumentTileItem(
+      issuedDocuments.add(
+        DocumentTileItem(
             title: key.isEmpty ? key : key[0].toUpperCase() + key.substring(1),
             id: value,
             unlink: () {
@@ -91,25 +92,22 @@ class _RootState extends State<Root> {
             },
             subtitle: "Ministry of Home Affairs",
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (_) => Document(type: DocumentType.Citizenship)));
-            }
-          ),
-        );
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => Document(type: DocumentType.Citizenship)));
+            }),
+      );
 
-        documentsTileList.add(IssuedDocumentItem(
-            title: key.isEmpty ? key : key[0].toUpperCase() + key.substring(1),
-            id: value,
-            subtitle: "Ministry of Home Affairs",
-            onTap: () {
-              Clipboard.setData(ClipboardData(text: value));
-              SnackBar snackBar = SnackBar(content: Text("Copied $key ID to clipboard"));
-              snackbarKey.currentState?.showSnackBar(snackBar); 
-            }
-          )
-        );
-      }    
-    );
-    
+      documentsTileList.add(IssuedDocumentItem(
+          title: key.isEmpty ? key : key[0].toUpperCase() + key.substring(1),
+          id: value,
+          subtitle: "Ministry of Home Affairs",
+          onTap: () {
+            Clipboard.setData(ClipboardData(text: value));
+            SnackBar snackBar =
+                SnackBar(content: Text("Copied $key ID to clipboard"));
+            snackbarKey.currentState?.showSnackBar(snackBar);
+          }));
+    });
 
     return [
       Home(switchTab: switchTab, documents: documentsTileList),
@@ -129,14 +127,16 @@ class _RootState extends State<Root> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error initializing data ${snapshot.error}'));
+          return Center(
+              child: Text('Error initializing data ${snapshot.error}'));
         } else {
           tabs = snapshot.data!;
           return MaterialApp(
             title: "nagarik app",
             scaffoldMessengerKey: snackbarKey,
             theme: ThemeData(
-              textTheme: GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme),
+              textTheme:
+                  GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme),
             ),
             debugShowCheckedModeBanner: false,
             home: tabs.isNotEmpty ? tabs[_currentTabIndex] : const SizedBox(),
@@ -147,9 +147,11 @@ class _RootState extends State<Root> {
   }
 }
 
-
 class AuthenticationPage extends StatelessWidget {
-  const AuthenticationPage({super.key});
+  final bool showSkipButton;
+
+  const AuthenticationPage({Key? key, this.showSkipButton = true})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -158,13 +160,13 @@ class AuthenticationPage extends StatelessWidget {
         body: Center(
           child: Column(children: [
             const SizedBox(height: 100),
-            const Text('Set FingerPrint',
+            const Text('FingerPrint',
                 style: TextStyle(
                   color: red,
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                 )),
-            SizedBox(height:40),
+            SizedBox(height: 40),
             const Text('You can login directly with fingerprint.',
                 style: TextStyle(
                   color: darkGrey,
@@ -221,32 +223,34 @@ class AuthenticationPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20),
-            Center(
-              child: Text(
-                'OR',
-                style: TextStyle(color: darkGrey),
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => const Root()));
-              },
-              child: const Center(
+            if (showSkipButton) ...[
+              SizedBox(height: 20),
+              Center(
                 child: Text(
-                  "Skip",
-                  style: TextStyle(color: white, fontSize: 24),
+                  'OR',
+                  style: TextStyle(color: darkGrey),
                 ),
               ),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: red,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  fixedSize: const Size.fromWidth(300),
-                  shadowColor: Colors.black),
-            )
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => const Root()));
+                },
+                child: const Center(
+                  child: Text(
+                    "Skip",
+                    style: TextStyle(color: white, fontSize: 24),
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: red,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    fixedSize: const Size.fromWidth(300),
+                    shadowColor: Colors.black),
+              )
+            ],
           ]),
         ));
   }

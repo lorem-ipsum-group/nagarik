@@ -94,7 +94,7 @@ class Home extends StatelessWidget {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => AuthenticationPage()),
+                                builder: (_) => AuthenticationPage(showSkipButton: false,)),
                           );
                         },
                       ),
