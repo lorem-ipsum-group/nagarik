@@ -103,7 +103,7 @@ class DocumentsState extends State<Documents> {
                             borderRadius: BorderRadius.circular(20)))),
                     child: const Center(
                       child: Text(
-                        "Uploads",
+                        "Correct",
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ))
