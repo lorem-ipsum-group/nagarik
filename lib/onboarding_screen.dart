@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:nagarik/intro_screens/1_nid_page.dart';
 import 'package:nagarik/intro_screens/2_gov_documents.dart';
-import 'package:nagarik/main.dart';
 import 'package:nagarik/my_colors.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:nagarik/registration.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -50,7 +50,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) {
-                        return const AuthenticationPage();
+                        return RegistrationScreen();
                       }),
                     );
                   },
@@ -74,7 +74,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) {
-                              return const AuthenticationPage();
+                              return RegistrationScreen();
                             }),
                           );
                         },

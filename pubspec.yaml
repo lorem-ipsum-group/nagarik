@@ -49,6 +49,7 @@ dependencies:
   chat_bubbles: ^1.5.0
   rest_api: ^0.0.0
   flutter_chat_bubble: ^2.0.2
+  localstorage: ^4.0.1+4
 
 
 dev_dependencies:

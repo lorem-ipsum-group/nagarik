@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:nagarik/firebase_options.dart';
 import 'package:nagarik/local_auth_interface.dart';
 import 'package:nagarik/home.dart';
@@ -13,13 +14,14 @@ import 'package:nagarik/profile.dart';
 import 'package:nagarik/my_colors.dart';
 import 'package:flutter/services.dart';
 import 'package:nagarik/my_document.dart';
+import 'package:nagarik/registration.dart~';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseFirestore.instance.settings =
       const Settings(persistenceEnabled: true);
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 var notifications = [
@@ -32,22 +34,36 @@ var notifications = [
 
 var uid = "123";
 
+
 List<DocumentTileItem> issuedDocuments = [];
 List<IssuedDocumentItem> documentsTileList = [];
 bool fetchedDocuments = false;
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  Future<String> getNID() async {
+    LocalStorage storage = LocalStorage("user_id");
+    await storage.ready;
+
+    return await storage.getItem("nid");
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: "nagarik app",
-        theme: ThemeData(
+    return FutureBuilder(
+      future: getNID(),
+      builder: (context, snapshot) {
+        return MaterialApp(
+          title: "nagarik app",
+          theme: ThemeData(
             textTheme:
-                GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme)),
-        debugShowCheckedModeBanner: false,
-        home: const OnboardingScreen());
+            GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme)),
+          debugShowCheckedModeBanner: false,
+          home: snapshot.data != null ? const AuthenticationPage() : const OnboardingScreen());
+        }
+    );
+    
   }
 }
 
